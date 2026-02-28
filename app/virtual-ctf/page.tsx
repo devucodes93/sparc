@@ -37,7 +37,6 @@ export default function VirtualCTFPage() {
             Virtual CTF – Signal Processing Edition
           </h1>
         </section>
-
         {/* DESCRIPTION */}
         <section className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-6 md:p-10 space-y-6 shadow-[0_0_40px_rgba(14,165,233,0.05)]">
           <p className="text-gray-400 text-sm sm:text-base md:text-lg leading-relaxed">
@@ -58,10 +57,8 @@ export default function VirtualCTFPage() {
             Prize Pool: 20k
           </p>
         </section>
-
         {/* CHALLENGE FORMAT */}
         <SectionTitle title="Challenge Format" orbitron={orbitron.className} />
-
         <div className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-6 md:p-10 shadow-[0_0_40px_rgba(14,165,233,0.05)] space-y-6">
           <InfoItem label="Mode" value="Fully virtual" />
           <InfoItem label="Team" value="3 to 4 members" />
@@ -74,13 +71,28 @@ export default function VirtualCTFPage() {
             value="Web-based (no installations required)"
           />
         </div>
-
         {/* FINAL DESCRIPTION */}
         <section className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-6 md:p-10 shadow-[0_0_40px_rgba(14,165,233,0.05)]">
           <p className="text-gray-400 text-sm sm:text-base md:text-lg leading-relaxed">
             Each challenge presents a signal (audio, image, time-series, or
             RF-like data) that contains a hidden flag. Participants must apply
             signal processing techniques to extract it.
+          </p>
+        </section>{" "}
+        <section className="text-center bg-gradient-to-br from-sky-900/10 to-transparent border border-sky-900/40 rounded-2xl px-6 py-10 md:px-14 md:py-16 space-y-6">
+          <h2
+            className={`text-2xl sm:text-3xl md:text-4xl font-black ${orbitron.className}`}
+          >
+            Registration Opening Soon
+          </h2>
+
+          <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+            Stay tuned for registration updates. We look forward to welcoming
+            you to an engaging and insightful IEEE SPS experience.
+          </p>
+
+          <p className="text-sky-500 uppercase tracking-widest text-xs md:text-sm">
+            March 7, 2026 • BMS Institute of Technology
           </p>
         </section>
       </main>

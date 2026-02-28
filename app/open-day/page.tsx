@@ -107,22 +107,7 @@ export default function IeeeOpenDayPage() {
         </div>
 
         {/* CTA SECTION */}
-        <section className="text-center bg-gradient-to-br from-sky-900/10 to-transparent border border-sky-900/40 rounded-2xl px-6 py-10 md:px-14 md:py-16 space-y-6">
-          <h2
-            className={`text-2xl sm:text-3xl md:text-4xl font-black ${orbitron.className}`}
-          >
-            Registration Opening Soon
-          </h2>
-
-          <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
-            Stay tuned for registration updates. We look forward to welcoming
-            you to an engaging and insightful IEEE SPS experience.
-          </p>
-
-          <p className="text-sky-500 uppercase tracking-widest text-xs md:text-sm">
-            March 13, 2026 • BMS Institute of Technology
-          </p>
-        </section>
+    
       </main>
 
       {/* FOOTER */}

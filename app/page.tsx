@@ -24,7 +24,7 @@ export default function ProfessionalEventPage() {
   };
   const onButtonClick = (id: number) => {
     if (id === 1) {
-      router.push("/radio-observatory");
+      router.push("/open-day");
     } else if (id === 2) {
       router.push("/deep-sky-camp");
     } else if (id === 3) {
@@ -80,7 +80,7 @@ export default function ProfessionalEventPage() {
               <img
                 src="/spslogo.png"
                 alt="SPS Logo"
-                className="max-h-16 md:max-h-18 lg:max-h-20 w-auto object-contain scale-110"
+                className="max-h-14 md:max-h-14 lg:max-h-14 w-auto object-contain scale-110"
               />
             </div>
 
@@ -170,7 +170,7 @@ export default function ProfessionalEventPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               onClick={() => scrollToSection("register")}
-              className="bg-sky-600 hover:bg-sky-700 text-white rounded-none px-12 py-8 text-sm font-black tracking-widest transition-all"
+              className="bg-sky-600 hover:bg-sky-700 text-white rounded-none px-12 py-8 text-sm font-black tracking-widest transition-all cursor-pointer"
             >
               REGISTER NOW
             </Button>
@@ -178,7 +178,7 @@ export default function ProfessionalEventPage() {
             <Button
               onClick={() => scrollToSection("about")}
               variant="outline"
-              className="border-white/10 hover:border-sky-500 rounded-none px-12 py-8 text-sm font-black tracking-widest transition-all"
+              className="border-white/10 hover:border-sky-500 rounded-none px-12 py-8 text-sm font-black tracking-widest transition-all cursor-pointer"
             >
               About
             </Button>
@@ -186,8 +186,8 @@ export default function ProfessionalEventPage() {
         </div>
       </section>
       {/* ORGANISER SECTION */}
-      <section className="py-24 px-8 bg-[#05070b] border-t border-sky-950">
-        <div className="max-w-5xl mx-auto text-center space-y-10">
+      <section className="py-10 px-8 bg-[#05070b] border-t border-sky-950">
+        <div className="max-w-5xl mx-auto text-center space-y-8">
           <div className="space-y-4">
             <p className="text-xs uppercase tracking-[0.35em] text-sky-500">
               Organised By
@@ -197,7 +197,6 @@ export default function ProfessionalEventPage() {
               IEEE SPS Bangalore Chapter
             </h2>
           </div>
-
           <div className="flex justify-center">
             <div className="bg-white p-6 rounded-xl shadow-lg w-fit">
               <img
@@ -207,18 +206,21 @@ export default function ProfessionalEventPage() {
               />
             </div>
           </div>
-
           <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            In association with{" "}
-            <span className="text-sky-500 font-semibold">
-              {/* :contentReference[oaicite:0]{index=0} */}
-            </span>
-          </p>
+            In association with
+          </p>{" "}
+          <div className="flex justify-center">
+            <img
+              src="/sps-bmsit.png"
+              alt=""
+              className="w-44 md:w-52 object-contain"
+            />{" "}
+          </div>
         </div>
       </section>
 
       {/* ABOUT SECTION */}
-      <section id="about" className="py-24 px-8 bg-[#080c13]">
+      <section id="about" className="py-1 px-8 bg-[#080c13]">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-20 items-center">
           <div className="space-y-6">
             <h2 className={`text-4xl font-bold ${orbitron.className}`}>
@@ -313,7 +315,7 @@ export default function ProfessionalEventPage() {
                       ))}
                     </ul>
 
-                    <Button className="w-full bg-transparent border border-white/10 group-hover:bg-sky-600 group-hover:border-sky-600 text-white rounded-none py-6 transition-all font-black text-[12px] tracking-widest">
+                    <Button className="w-full bg-transparent border border-white/10 group-hover:bg-sky-600 group-hover:border-sky-600 text-white rounded-none py-6 transition-all font-black text-[12px] tracking-widest cursor-pointer">
                       Click for more details
                     </Button>
                   </div>
