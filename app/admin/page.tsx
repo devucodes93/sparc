@@ -135,41 +135,64 @@ export default function AdminPage() {
               </div>
 
               {user.consentForm && (
-                <div
-                  className="relative cursor-pointer group w-full md:w-[220px] h-[140px]"
-                  onClick={() => setSelectedImage(user.consentForm)}
-                >
-                  <Image
-                    src={user.consentForm}
-                    alt="consent form"
-                    fill
-                    className="rounded-lg object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition rounded-lg flex items-center justify-center">
-                    <span className="opacity-0 group-hover:opacity-100 text-white text-xs">
-                      Click to zoom
-                    </span>
-                  </div>
+                <div className="w-full md:w-[220px] h-[140px] flex items-center justify-center bg-[#0d131c] border border-sky-900/40 rounded-lg">
+                  {user.consentForm.toLowerCase().endsWith(".pdf") ? (
+                    <a
+                      href={user.consentForm}
+                      target="_blank"
+                      className="text-sky-400 text-sm underline"
+                    >
+                      View Consent PDF
+                    </a>
+                  ) : (
+                    <div
+                      className="relative cursor-pointer group w-full h-full"
+                      onClick={() => setSelectedImage(user.consentForm)}
+                    >
+                      <Image
+                        src={user.consentForm}
+                        alt="consent"
+                        fill
+                        className="rounded-lg object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition rounded-lg flex items-center justify-center">
+                        <span className="opacity-0 group-hover:opacity-100 text-white text-xs">
+                          Click to zoom
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
               {user.screenshot && (
-                <div
-                  className="relative cursor-pointer group w-full md:w-[220px] h-[140px]"
-                  onClick={() => setSelectedImage(user.screenshot)}
-                >
-                  <Image
-                    src={user.screenshot}
-                    alt="payment"
-                    fill
-                    className="rounded-lg object-cover"
-                  />
-
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition rounded-lg flex items-center justify-center">
-                    <span className="opacity-0 group-hover:opacity-100 text-white text-xs">
-                      Click to zoom
-                    </span>
-                  </div>
+                <div className="w-full md:w-[220px] h-[140px] flex items-center justify-center bg-[#0d131c] border border-sky-900/40 rounded-lg">
+                  {user.screenshot.toLowerCase().endsWith(".pdf") ? (
+                    <a
+                      href={user.screenshot}
+                      target="_blank"
+                      className="text-sky-400 text-sm underline"
+                    >
+                      View Payment PDF
+                    </a>
+                  ) : (
+                    <div
+                      className="relative cursor-pointer group w-full h-full"
+                      onClick={() => setSelectedImage(user.screenshot)}
+                    >
+                      <Image
+                        src={user.screenshot}
+                        alt="payment"
+                        fill
+                        className="rounded-lg object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition rounded-lg flex items-center justify-center">
+                        <span className="opacity-0 group-hover:opacity-100 text-white text-xs">
+                          Click to zoom
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

@@ -8,6 +8,12 @@ import { useRouter } from "next/navigation";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["700"] });
 
+const allowedImageTypes = [
+  "image/png",
+  "image/jpeg",
+  "image/jpg",
+  "image/webp",
+];
 export default function RegisterPage() {
   const router = useRouter();
 
@@ -108,6 +114,19 @@ export default function RegisterPage() {
       });
   };
 
+  const handleFileValidation = (
+    file: File | undefined,
+    setter: (file: File | null) => void,
+  ) => {
+    if (!file) return;
+
+    if (!allowedImageTypes.includes(file.type)) {
+      alert("Only PNG, JPG, JPEG, or WEBP images are allowed.");
+      return;
+    }
+
+    setter(file);
+  };
   /* ---------- UI ---------- */
 
   return (
@@ -188,13 +207,15 @@ export default function RegisterPage() {
             {step === 2 && (
               <div className="space-y-5">
                 <label className="text-sm text-gray-300 block">
-                  Upload Consent Form (PDF/JPG)
+                  Upload Consent Form (JPG/PNG/WEBP)
                 </label>
                 <input
                   type="file"
-                  accept="image/*,application/pdf"
-                  className="w-full text-sm text-gray-400 file:bg-sky-600 file:border-0 file:px-4 file:py-2 file:rounded-lg file:text-white file:cursor-pointer"
-                  onChange={(e) => setConsentFile(e.target.files?.[0] || null)}
+                  accept="image/png,image/jpeg,image/jpg,image/webp"
+                  className="w-full text-sm text-gray-400 file:bg-sky-600 file:border-0 file:px-4 file:py-2 file:rounded-lg file:text-white cursor-pointer"
+                  onChange={(e) =>
+                    handleFileValidation(e.target.files?.[0], setConsentFile)
+                  }
                 />
               </div>
             )}
@@ -272,9 +293,11 @@ export default function RegisterPage() {
                 </label>
                 <input
                   type="file"
-                  accept="image/*"
-                  className="w-full text-sm text-gray-400 file:bg-sky-600 file:border-0 file:px-4 file:py-2 file:rounded-lg file:text-white file:cursor-pointer"
-                  onChange={(e) => setScreenshot(e.target.files?.[0] || null)}
+                  accept="image/png,image/jpeg,image/jpg,image/webp"
+                  className="w-full text-sm text-gray-400 file:bg-sky-600 file:border-0 file:px-4 file:py-2 file:rounded-lg file:text-white cursor-pointer"
+                  onChange={(e) =>
+                    handleFileValidation(e.target.files?.[0], setScreenshot)
+                  }
                 />
                 <InputField
                   label="UTR Number"
@@ -309,7 +332,7 @@ export default function RegisterPage() {
               </Button>
             ) : (
               <Button
-                className="bg-sky-600 hover:bg-sky-700 px-8 font-bold"
+                className="bg-sky-600 hover:bg-sky-700 px-8 font-bold cursor-pointer"
                 onClick={handleSubmit}
                 disabled={!canSubmit}
               >
