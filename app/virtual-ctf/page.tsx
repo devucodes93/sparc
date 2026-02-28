@@ -15,7 +15,7 @@ export default function VirtualCTFPage() {
       <nav
         className={`fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-xl px-6 py-2 border-b border-white/5`}
       >
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-17">
+        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-17 ">
           {/* LOGO SECTION */}
           <div
             className="flex items-center gap-3 cursor-pointer"
@@ -45,7 +45,7 @@ export default function VirtualCTFPage() {
       </nav>
 
       {/* MAIN CONTENT */}
-      <main className="pt-28 md:pt-36 pb-20 px-6 md:px-10 max-w-6xl mx-auto space-y-20 md:space-y-28">
+      <main className="pt-28 md:pt-36 pb-20 px-6 md:px-10 max-w-6xl mx-auto space-y-13 md:space-y-10">
         {/* HERO */}
         <section className="text-center space-y-6 border-b border-sky-900/30 pb-10 md:pb-14">
           <h1
@@ -59,9 +59,9 @@ export default function VirtualCTFPage() {
           <p className="text-gray-400 text-sm sm:text-base md:text-lg leading-relaxed">
             The Virtual Capture-The-Flag (CTF) challenge is an online,
             puzzle-based competition focused on signal processing concepts
-            hidden inside real-world signals. Participants solve a series of
-            progressively challenging problems by analyzing, decoding, and
-            transforming signals to uncover hidden flags.
+            hidden inside real-world signalsParticipants solve a challenging
+            problem by analyzing, decoding, and transforming signals to uncover
+            the hidden flag.
           </p>
 
           <p className="text-gray-400 text-sm sm:text-base md:text-lg leading-relaxed">
@@ -79,10 +79,7 @@ export default function VirtualCTFPage() {
         <div className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-6 md:p-10 shadow-[0_0_40px_rgba(14,165,233,0.05)] space-y-6">
           <InfoItem label="Mode" value="Fully virtual" />
           <InfoItem label="Team" value="1 to 4 members" />
-          <InfoItem
-            label="Difficulty"
-            value="Beginner → Intermediate → Advanced"
-          />
+
           <InfoItem
             label="Platform"
             value="Web-based (no installations required)"

@@ -134,6 +134,25 @@ export default function AdminPage() {
                 </p>
               </div>
 
+              {user.consentForm && (
+                <div
+                  className="relative cursor-pointer group w-full md:w-[220px] h-[140px]"
+                  onClick={() => setSelectedImage(user.consentForm)}
+                >
+                  <Image
+                    src={user.consentForm}
+                    alt="consent form"
+                    fill
+                    className="rounded-lg object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition rounded-lg flex items-center justify-center">
+                    <span className="opacity-0 group-hover:opacity-100 text-white text-xs">
+                      Click to zoom
+                    </span>
+                  </div>
+                </div>
+              )}
+
               {user.screenshot && (
                 <div
                   className="relative cursor-pointer group w-full md:w-[220px] h-[140px]"
@@ -161,7 +180,7 @@ export default function AdminPage() {
       {/* IMAGE ZOOM MODAL */}
       {selectedImage && (
         <div
-          className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-6"
+          className="fixed inset-0 bg-black/100 flex items-center justify-center z-50 p-6"
           onClick={() => setSelectedImage(null)}
         >
           <div className="relative max-w-4xl w-full">
@@ -174,10 +193,10 @@ export default function AdminPage() {
             />
 
             <button
-              className="absolute top-3 right-3 bg-red-500 px-3 py-1 rounded-lg text-sm"
+              className="absolute top-3 right-3 bg-red-500 px-3 py-1 rounded-lg text-sm cursor-pointer"
               onClick={() => setSelectedImage(null)}
             >
-              Close
+              ✕
             </button>
           </div>
         </div>

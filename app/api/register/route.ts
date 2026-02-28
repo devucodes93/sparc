@@ -15,8 +15,9 @@ export async function POST(req: Request) {
     const screenshotFile = formData.get("screenshot") as File | null;
     const utr = formData.get("utr") as string;
     const memberType = formData.get("memberType") as string;
+    const consentFile = formData.get("consentFile") as File | null;
     let uploadResponse;
-
+    let consentUploadResponse;
     if (screenshotFile) {
       const buffer = Buffer.from(await screenshotFile.arrayBuffer());
       const base64 = buffer.toString("base64");
@@ -27,12 +28,29 @@ export async function POST(req: Request) {
         folder: "registrations",
       });
     }
+    if (consentFile) {
+      const buffer = Buffer.from(await consentFile.arrayBuffer());
+      const base64 = buffer.toString("base64");
+      const dataUrl = `data:${consentFile.type};base64,${base64}`;
+      consentUploadResponse = await cloudinary.uploader.upload(dataUrl, {
+        folder: "consent-forms",
+      });
+    }
+
     if (!uploadResponse) {
       return NextResponse.json(
         { success: false, message: "Screenshot upload failed" },
         { status: 400 },
       );
     }
+
+    if (!consentUploadResponse) {
+      return NextResponse.json(
+        { success: false, message: "Consent form upload failed" },
+        { status: 400 },
+      );
+    }
+
     const user = await Register.create({
       name,
       contact,
@@ -41,6 +59,7 @@ export async function POST(req: Request) {
       screenshot: uploadResponse?.secure_url,
       utr,
       memberType,
+      consentForm: consentUploadResponse?.secure_url,
     });
 
     return NextResponse.json({

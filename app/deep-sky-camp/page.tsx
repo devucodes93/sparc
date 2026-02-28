@@ -45,7 +45,7 @@ export default function DeepSkyCampPage() {
       </nav>
 
       {/* MAIN CONTENT */}
-      <main className="pt-28 md:pt-36 pb-20 px-6 md:px-10 max-w-6xl mx-auto space-y-20 md:space-y-28">
+      <main className="pt-28 md:pt-36 pb-20 px-6 md:px-10 max-w-6xl mx-auto space-y-10 md:space-y-8">
         {/* HERO */}
         <section className="text-center space-y-6 border-b border-sky-900/30 pb-10 md:pb-14">
           <p className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-sky-500 font-semibold">

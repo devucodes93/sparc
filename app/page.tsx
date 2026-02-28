@@ -50,7 +50,7 @@ export default function ProfessionalEventPage() {
       subtitle: "",
       points: [
         "Date: 14th to 15th March",
-        "Overnight camp stay at Sri Krishna Goshala, Sathaghatta",
+        "Overnight camp stay at Urdigere near Devarayanadurga",
       ],
     },
     {
@@ -196,13 +196,13 @@ export default function ProfessionalEventPage() {
               <img
                 src="/SPS Bangalore Chapter.png"
                 alt=""
-                className="w-40 md:w-48 object-contain"
+                className="w-30 md:w-48 object-contain"
               />
               {/* Increased size of second image here */}
               <img
                 src="/Bangalore-Section-Logo.png"
                 alt=""
-                className="w-48 md:w-64 object-contain"
+                className="w-44 md:w-64 object-contain"
               />
             </div>
           </div>
@@ -215,7 +215,7 @@ export default function ProfessionalEventPage() {
               <img
                 src="/sps-bmsit.png"
                 alt=""
-                className="w-36 md:w-44 object-contain"
+                className="w-38 md:w-60 object-contain"
               />
             </div>
           </div>
@@ -285,7 +285,7 @@ export default function ProfessionalEventPage() {
                 title: "Deep Sky Observation Camp",
                 points: [
                   "Date: 14th to 15th March",
-                  "Overnight camp stay at Sri Krishna Goshala, Sathaghatta",
+                  "Overnight camp stay at Urdigere near Devarayanadurga",
                 ],
               },
               {

@@ -9,7 +9,7 @@ export default function IeeeOpenDayPage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-[#05070b] text-white overflow-x-hidden">
+    <div className="min-h-screen bg-[#05070b] text-white overflow-x-hidden ">
       {/* NAVBAR */}
       <nav
         className={`fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-xl px-6 py-2 border-b border-white/5`}
@@ -44,7 +44,7 @@ export default function IeeeOpenDayPage() {
       </nav>
 
       {/* MAIN CONTENT */}
-      <main className="pt-28 md:pt-36 pb-20 px-6 md:px-10 max-w-6xl mx-auto space-y-20 md:space-y-28">
+      <main className="pt-28 md:pt-36 pb-20 px-6 md:px-10 max-w-6xl mx-auto space-y-13 md:space-y-10">
         {/* HERO */}
         <section className="text-center space-y-6 border-b border-sky-900/30 pb-10 md:pb-14">
           <p className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-sky-500 font-semibold">
@@ -73,8 +73,8 @@ export default function IeeeOpenDayPage() {
 
         <div className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-6 md:p-10 shadow-[0_0_40px_rgba(14,165,233,0.05)] space-y-6 text-gray-400 text-sm md:text-base leading-relaxed">
           <p>
-            IEEE Open Day is an interactive showcase hosted by student branch
-            bmsit, designed to introduce students to the world of signal
+            IEEE Open Day is an interactive showcase hosted by Student Branch
+            Bmsit, designed to introduce students to the world of signal
             processing through hands-on projects, live demos, and open
             discussions.
           </p>
