@@ -187,7 +187,7 @@ export default function ProfessionalEventPage() {
       </section>
       {/* ORGANISER SECTION */}
       <section className="py-10 px-8 bg-[#05070b] border-t border-sky-950">
-        <div className="max-w-5xl mx-auto text-center space-y-8">
+        <div className="max-w-5xl mx-auto text-center space-y-10">
           <div className="space-y-4">
             <p className="text-xs uppercase tracking-[0.35em] text-sky-500">
               Organised By
@@ -197,6 +197,7 @@ export default function ProfessionalEventPage() {
               IEEE SPS Bangalore Chapter
             </h2>
           </div>
+
           <div className="flex justify-center">
             <div className="bg-white p-6 rounded-xl shadow-lg w-fit">
               <img
@@ -206,21 +207,20 @@ export default function ProfessionalEventPage() {
               />
             </div>
           </div>
+
           <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed">
             In association with
-          </p>{" "}
-          <div className="flex justify-center">
-            <img
-              src="/sps-bmsit.png"
-              alt=""
-              className="w-44 md:w-52 object-contain"
-            />{" "}
-          </div>
+          </p> <div className="flex justify-center">
+          <img
+            src="/sps-bmsit.png"
+            alt=""
+            className="w-44 md:w-52 object-contain"
+          />   </div>
         </div>
       </section>
 
       {/* ABOUT SECTION */}
-      <section id="about" className="py-1 px-8 bg-[#080c13]">
+      <section id="about" className="py-24 px-8 ">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-20 items-center">
           <div className="space-y-6">
             <h2 className={`text-4xl font-bold ${orbitron.className}`}>
