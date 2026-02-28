@@ -153,6 +153,7 @@ export default function DeepSkyCampPage() {
         text-sm sm:text-base
         transition-all duration-300
         hover:scale-[1.02]
+        cursor-pointer
       "
             >
               REGISTER FOR DEEP SKY CAMP
