@@ -4,13 +4,14 @@ import { useState, useEffect } from "react";
 import { Menu, X, Calendar, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Orbitron } from "next/font/google";
+import { useRouter } from "next/navigation";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["700", "800"] });
 
 export default function ProfessionalEventPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
@@ -21,24 +22,66 @@ export default function ProfessionalEventPage() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setMobileMenuOpen(false);
   };
-
+  const onButtonClick = (id: number) => {
+    if (id === 1) {
+      router.push("/radio-observatory");
+    } else if (id === 2) {
+      router.push("/deep-sky-camp");
+    } else if (id === 3) {
+      router.push("/virtual-ctf");
+    } else {
+      console.warn("Invalid id");
+    }
+  };
+  const registrationDays = [
+    {
+      id: 1,
+      title: "IEEE Open Day",
+      subtitle: "",
+      points: [
+        "SPS Society Project Demo",
+        "Venue: BMS Institute of Technology",
+        "Date: 13th March",
+      ],
+    },
+    {
+      id: 2,
+      title: "Deep Sky Observation Camp",
+      subtitle: "",
+      points: [
+        "Date: 14th to 15th March",
+        "Overnight camp stay at Sri Krishna Goshala, Sathaghatta",
+      ],
+    },
+    {
+      id: 3,
+      title: "Virtual CTF Based Challenge",
+      subtitle: "",
+      points: ["Prize Pool: ₹20,000", "Date: 7th March"],
+    },
+  ];
   return (
     <div className="min-h-screen bg-[#05070b] text-white overflow-x-hidden selection:bg-sky-500/20">
       {/* NAVBAR */}
       <nav
         className={`fixed top-0 w-full z-50 transition-all duration-500 backdrop-blur-xl ${
           scrolled
-            ? "bg-[#060b12]/70 border-b border-sky-900/40 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
-            : "bg-[#05070b]/40 py-6"
+            ? "bg-[#060b12]/70 border-b border-sky-900/40 h-20 shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
+            : "bg-[#05070b]/40 h-20"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-8 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-8 h-full flex justify-between items-center">
+          {/* LOGO */}
           <div
-            className="flex items-center gap-3 cursor-pointer"
+            className="flex items-center gap-3 cursor-pointer h-full"
             onClick={() => scrollToSection("home")}
           >
-            <div className="w-10 h-10 bg-sky-600 flex items-center justify-center rotate-3 ring-2 ring-sky-900/50">
-              <img src="https://www.comedk.org/uploads/bmslogo1.png" alt="" />
+            <div className="flex items-center h-full">
+              <img
+                src="/spslogo.png"
+                alt="SPS Logo"
+                className="max-h-16 md:max-h-18 lg:max-h-20 w-auto object-contain scale-110"
+              />
             </div>
 
             <span
@@ -48,18 +91,20 @@ export default function ProfessionalEventPage() {
             </span>
           </div>
 
+          {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center gap-10">
             {["home", "about", "schedule", "register"].map((item) => (
               <button
                 key={item}
                 onClick={() => scrollToSection(item)}
-                className="text-[12px] font-bold uppercase tracking-[0.3em] hover:text-sky-400 transition-colors"
+                className="text-[12px] font-bold uppercase tracking-[0.3em] hover:text-sky-400 transition-colors cursor-pointer"
               >
                 {item}
               </button>
             ))}
           </div>
 
+          {/* MOBILE MENU BUTTON */}
           <button
             className="md:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -68,7 +113,6 @@ export default function ProfessionalEventPage() {
           </button>
         </div>
       </nav>
-
       {/* MOBILE MENU */}
       <div
         className={`fixed top-0 right-0 h-full w-64 bg-[#060b12]/90 backdrop-blur-xl border-l border-sky-900/30 transform transition-transform duration-500 z-40 md:hidden ${
@@ -141,6 +185,37 @@ export default function ProfessionalEventPage() {
           </div>
         </div>
       </section>
+      {/* ORGANISER SECTION */}
+      <section className="py-24 px-8 bg-[#05070b] border-t border-sky-950">
+        <div className="max-w-5xl mx-auto text-center space-y-10">
+          <div className="space-y-4">
+            <p className="text-xs uppercase tracking-[0.35em] text-sky-500">
+              Organised By
+            </p>
+
+            <h2 className={`text-4xl font-bold ${orbitron.className}`}>
+              IEEE SPS Bangalore Chapter
+            </h2>
+          </div>
+
+          <div className="flex justify-center">
+            <div className="bg-white p-6 rounded-xl shadow-lg w-fit">
+              <img
+                src="/Bangalore-Section-Logo.png"
+                alt="SPS Bangalore Chapter"
+                className="w-44 md:w-52 object-contain"
+              />
+            </div>
+          </div>
+
+          <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed">
+            In association with{" "}
+            <span className="text-sky-500 font-semibold">
+              {/* :contentReference[oaicite:0]{index=0} */}
+            </span>
+          </p>
+        </div>
+      </section>
 
       {/* ABOUT SECTION */}
       <section id="about" className="py-24 px-8 bg-[#080c13]">
@@ -153,20 +228,20 @@ export default function ProfessionalEventPage() {
             <div className="w-20 h-1 bg-sky-500" />
 
             <p className="text-gray-400 leading-relaxed text-lg italic font-serif">
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua."
+              “S.P.A.R.C. – Signal Processing, AI & Real-time Computing Camp”
             </p>
           </div>
 
           <div className="space-y-4 text-gray-500 text-sm leading-relaxed">
             <p>
-              Duis aute irure dolor in reprehenderit in voluptate velit esse
-              cillum dolore eu fugiat nulla pariatur.
+              is a structured 3-Day Immersive Bootcamp on Signal Processing.
+              This is a blend of foundation Signal Processing, Machine Learning,
+              Project Based Learning and Technical Competitions.
             </p>
 
             <p>
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-              accusantium doloremque laudantium.
+              This Bootcamp, is designed for Engineering Students, to move from
+              the tradition core theory to practical innovation.
             </p>
           </div>
         </div>
@@ -185,39 +260,67 @@ export default function ProfessionalEventPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((day) => (
-              <div
-                key={day}
-                className="group relative bg-[#0a1018] border border-sky-950 p-10 hover:border-sky-500/50 transition-all duration-500 overflow-hidden"
-              >
-                <div className="absolute -right-4 -top-4 text-9xl font-black text-white/[0.02] group-hover:text-sky-500/[0.05] transition-colors">
-                  0{day}
-                </div>
+          {/* Event Data */}
+          {/*
+      This makes the cards dynamic & clean
+    */}
+          {(() => {
+            const events = [
+              {
+                id: 1,
+                title: "IEEE Open Day",
+                points: [
+                  "SPS Society Project Demo",
+                  "Venue: BMS Institute of Technology",
+                  "Date: 13th March",
+                ],
+              },
+              {
+                id: 2,
+                title: "Deep Sky Observation Camp",
+                points: [
+                  "Date: 14th to 15th March",
+                  "Overnight camp stay at Sri Krishna Goshala, Sathaghatta",
+                ],
+              },
+              {
+                id: 3,
+                title: "Virtual CTF Based Challenge",
+                points: ["Prize Pool: ₹20,000", "Date: 7th March"],
+              },
+            ];
 
-                <h3 className="text-xs font-black text-sky-500 uppercase tracking-[0.3em] mb-2">
-                  Registration Day
-                </h3>
+            return (
+              <div className="grid md:grid-cols-3 gap-8">
+                {events.map((event) => (
+                  <div
+                    key={event.id}
+                    onClick={() => onButtonClick(event.id)}
+                    className="group relative bg-[#0a1018] border border-sky-950 p-10 hover:border-sky-500/50 transition-all duration-500 overflow-hidden cursor-pointer"
+                  >
+                    <p
+                      className={`text-3xl font-bold mb-8 ${orbitron.className} group-hover:text-sky-400 transition-colors`}
+                    >
+                      {event.title}
+                    </p>
 
-                <p className={`text-4xl font-bold mb-8 ${orbitron.className}`}>
-                  Day 0{day}
-                </p>
+                    <ul className="space-y-4 mb-12 text-gray-400 text-sm font-medium">
+                      {event.points.map((point, index) => (
+                        <li key={index} className="flex items-center gap-2">
+                          <ChevronRight size={14} className="text-sky-500" />
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
 
-                <ul className="space-y-4 mb-12 text-gray-400 text-sm font-medium">
-                  {[1, 2, 3].map((i) => (
-                    <li key={i} className="flex items-center gap-2">
-                      <ChevronRight size={14} className="text-sky-500" />
-                      placeholder text
-                    </li>
-                  ))}
-                </ul>
-
-                <Button className="w-full bg-transparent border border-white/10 group-hover:bg-sky-600 group-hover:border-sky-600 text-white rounded-none py-6 transition-all font-black text-[12px] tracking-widest">
-                  Click for more details
-                </Button>
+                    <Button className="w-full bg-transparent border border-white/10 group-hover:bg-sky-600 group-hover:border-sky-600 text-white rounded-none py-6 transition-all font-black text-[12px] tracking-widest">
+                      Click for more details
+                    </Button>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            );
+          })()}
         </div>
       </section>
 
@@ -239,9 +342,9 @@ export default function ProfessionalEventPage() {
           </div>
 
           <div className="flex flex-col md:items-end gap-2 text-sm">
-            <p className="text-white font-bold">Contact Administration</p>
+            <p className="text-white font-bold">Contact</p>
             <p>sparc@bmsit.in</p>
-            <p>+91 80 2846 3635</p>
+            <p>+91 96061 82802</p>
 
             <p className="mt-6 text-sky-500 font-black tracking-tighter">
               EXCELLENCE THROUGH INNOVATION
