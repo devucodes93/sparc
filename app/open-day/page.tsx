@@ -56,10 +56,10 @@ export default function IeeeOpenDayPage() {
 
         <div className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-6 md:p-10 shadow-[0_0_40px_rgba(14,165,233,0.05)] space-y-6 text-gray-400 text-sm md:text-base leading-relaxed">
           <p>
-            IEEE Open Day is an interactive showcase hosted by the IEEE Signal
-            Processing Society (SPS), designed to introduce students to the
-            world of signal processing through hands-on projects, live demos,
-            and open discussions.
+            IEEE Open Day is an interactive showcase hosted by student branch
+            bmsit, designed to introduce students to the world of signal
+            processing through hands-on projects, live demos, and open
+            discussions.
           </p>
 
           <p>
@@ -107,7 +107,6 @@ export default function IeeeOpenDayPage() {
         </div>
 
         {/* CTA SECTION */}
-    
       </main>
 
       {/* FOOTER */}

@@ -93,7 +93,7 @@ export default function ProfessionalEventPage() {
 
           {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center gap-10">
-            {["home", "about", "schedule", "register"].map((item) => (
+            {["home", "about", "register"].map((item) => (
               <button
                 key={item}
                 onClick={() => scrollToSection(item)}
@@ -120,7 +120,7 @@ export default function ProfessionalEventPage() {
         }`}
       >
         <div className="flex flex-col mt-24 space-y-8 px-8">
-          {["home", "about", "timeline", "register"].map((item) => (
+          {["home", "about", "register"].map((item) => (
             <button
               key={item}
               onClick={() => scrollToSection(item)}
@@ -186,35 +186,37 @@ export default function ProfessionalEventPage() {
         </div>
       </section>
       {/* ORGANISER SECTION */}
-      <section className="py-10 px-8 bg-[#05070b] border-t border-sky-950 mb-0">
-        <div className="max-w-5xl mx-auto text-center space-y-10">
+      <section className="py-10 px-8 bg-[#05070b] border-t border-sky-950">
+        <div className="max-w-5xl mx-auto text-center space-y-8">
           <div className="space-y-4">
             <p className="text-xs uppercase tracking-[0.35em] text-sky-500">
               Organised By
             </p>
-
-            <h2 className={`text-4xl font-bold ${orbitron.className}`}>
-              IEEE SPS Bangalore Chapter
-            </h2>
-          </div>
-          <div className="flex justify-center">
-            <div className="bg-white p-6 rounded-xl shadow-lg w-fit">
+            <div className="flex flex-row justify-center items-center gap-8 md:gap-12">
+              <img
+                src="/SPS Bangalore Chapter.png"
+                alt=""
+                className="w-36 md:w-44 object-contain"
+              />
               <img
                 src="/Bangalore-Section-Logo.png"
-                alt="SPS Bangalore Chapter"
-                className="w-44 md:w-52 object-contain"
+                alt=""
+                className="w-36 md:w-44 object-contain"
               />
             </div>
           </div>
-          <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            In association with
-          </p>{" "}
-          <div className="flex justify-center">
-            <img
-              src="/sps-bmsit.png"
-              alt=""
-              className="w-44 md:w-52 object-contain"
-            />{" "}
+
+          <div className="space-y-4">
+            <p className="text-gray-400 text-sm leading-relaxed">
+              In association with
+            </p>
+            <div className="flex justify-center">
+              <img
+                src="/sps-bmsit.png"
+                alt=""
+                className="w-36 md:w-44 object-contain"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -335,7 +337,6 @@ export default function ProfessionalEventPage() {
             >
               SPARC 2026
             </div>
-
             <p className="text-sm max-w-sm">
               BMS Institute of Technology and Management
               <br />
@@ -346,7 +347,8 @@ export default function ProfessionalEventPage() {
           <div className="flex flex-col md:items-end gap-2 text-sm">
             <p className="text-white font-bold">Contact</p>
             <p>sparc@bmsit.in</p>
-            <p>+91 96061 82802</p>
+            <p>bangalore-sps@ieee.org</p>
+            <p>Suraj: +91 96061 82802</p>
 
             <p className="mt-6 text-sky-500 font-black tracking-tighter">
               EXCELLENCE THROUGH INNOVATION

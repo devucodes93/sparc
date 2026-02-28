@@ -8,6 +8,7 @@ const RegisterSchema = new mongoose.Schema(
     ieeeId: String,
     screenshot: String,
     utr: String,
+    memberType: String,
   },
   { timestamps: true },
 );

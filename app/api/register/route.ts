@@ -14,6 +14,7 @@ export async function POST(req: Request) {
     const ieeeId = formData.get("ieeeId") as string;
     const screenshotFile = formData.get("screenshot") as File | null;
     const utr = formData.get("utr") as string;
+    const memberType = formData.get("memberType") as string;
     let uploadResponse;
 
     if (screenshotFile) {
@@ -39,6 +40,7 @@ export async function POST(req: Request) {
       ieeeId,
       screenshot: uploadResponse?.secure_url,
       utr,
+      memberType,
     });
 
     return NextResponse.json({

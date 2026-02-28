@@ -124,7 +124,11 @@ export default function AdminPage() {
 
                 <p>Contact : {user.contact}</p>
                 <p>Email : {user.email}</p>
-                <p>IEEE ID : {user.ieeeId}</p>
+                <p>
+                  Member Type :{" "}
+                  <span className="text-sky-500">{user.memberType}</span>
+                </p>
+                {<p>IEEE ID : {user.ieeeId ? user.ieeeId : "---"}</p>}
                 <p>
                   UTR :<span className="text-yellow-200">{user.utr}</span>
                 </p>

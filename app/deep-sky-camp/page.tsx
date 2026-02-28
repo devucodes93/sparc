@@ -138,7 +138,7 @@ export default function DeepSkyCampPage() {
             Register now to be part of an unforgettable deep sky exploration.
           </p>
 
-          <div className="pt-4">
+          <div className="pt-4 flex flex-col sm:flex-col items-center justify-center gap-4">
             <Button
               onClick={() => router.push("/register")}
               className="
@@ -158,6 +158,15 @@ export default function DeepSkyCampPage() {
             >
               REGISTER FOR DEEP SKY CAMP
             </Button>
+
+            {/* link to download conscent form*/}
+            <a
+              href="/consent-form.pdf"
+              target="_blank"
+              className="ml-4 text-sm text-gray-400 underline"
+            >
+              Download Consent Form
+            </a>
           </div>
         </section>
       </main>
