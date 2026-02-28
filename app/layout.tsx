@@ -15,9 +15,8 @@ const orbitron = Orbitron({
   weight: ["700", "800"],
 });
 export const metadata: Metadata = {
-  title: "SPARC 2025",
-  description:
-    "Join the ultimate college hackathon experience. Build, innovate, and win amazing prizes!",
+  title: "SPARC 2026",
+  description: "Join the ultimate event",
   generator: "v0.app",
   icons: {
     icon: [
