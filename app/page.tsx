@@ -186,7 +186,7 @@ export default function ProfessionalEventPage() {
         </div>
       </section>
       {/* ORGANISER SECTION */}
-      <section className="py-10 px-8 bg-[#05070b] border-t border-sky-950">
+      <section className="py-10 px-8 bg-[#05070b] border-t border-sky-950 mb-0">
         <div className="max-w-5xl mx-auto text-center space-y-10">
           <div className="space-y-4">
             <p className="text-xs uppercase tracking-[0.35em] text-sky-500">
@@ -197,7 +197,6 @@ export default function ProfessionalEventPage() {
               IEEE SPS Bangalore Chapter
             </h2>
           </div>
-
           <div className="flex justify-center">
             <div className="bg-white p-6 rounded-xl shadow-lg w-fit">
               <img
@@ -207,15 +206,16 @@ export default function ProfessionalEventPage() {
               />
             </div>
           </div>
-
           <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed">
             In association with
-          </p> <div className="flex justify-center">
-          <img
-            src="/sps-bmsit.png"
-            alt=""
-            className="w-44 md:w-52 object-contain"
-          />   </div>
+          </p>{" "}
+          <div className="flex justify-center">
+            <img
+              src="/sps-bmsit.png"
+              alt=""
+              className="w-44 md:w-52 object-contain"
+            />{" "}
+          </div>
         </div>
       </section>
 

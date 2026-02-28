@@ -125,6 +125,9 @@ export default function AdminPage() {
                 <p>Contact : {user.contact}</p>
                 <p>Email : {user.email}</p>
                 <p>IEEE ID : {user.ieeeId}</p>
+                <p>
+                  UTR :<span className="text-yellow-200">{user.utr}</span>
+                </p>
               </div>
 
               {user.screenshot && (

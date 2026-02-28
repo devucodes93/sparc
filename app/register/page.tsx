@@ -18,6 +18,7 @@ export default function RegisterPage() {
     contact: "",
     email: "",
     ieeeId: "",
+    utr: "",
   });
   const [loading, setLoading] = useState(false);
   const [screenshot, setScreenshot] = useState<File | null>(null);
@@ -37,7 +38,8 @@ export default function RegisterPage() {
     emailValid &&
     contactValid;
 
-  const isSubmitEnabled = screenshot && isStep1Valid;
+  const isStep3Valid = form.utr && screenshot;
+  const isSubmitEnabled = screenshot && isStep1Valid && isStep3Valid;
 
   /* ---------- HANDLERS ---------- */
 
@@ -69,6 +71,7 @@ export default function RegisterPage() {
     setLoading(true);
     const formData = new FormData();
     formData.append("name", form.name);
+    formData.append("utr", form.utr);
     formData.append("contact", form.contact);
     formData.append("email", form.email);
     formData.append("ieeeId", form.ieeeId);
@@ -211,6 +214,12 @@ export default function RegisterPage() {
                   accept="image/*"
                   className="w-full text-sm text-gray-400 file:bg-sky-600 file:border-0 file:px-4 file:py-2 file:rounded-lg file:text-white file:cursor-pointer hover:file:bg-sky-700 transition"
                   onChange={(e) => setScreenshot(e.target.files?.[0] || null)}
+                />
+
+                <InputField
+                  label="UTR Number"
+                  value={form.utr}
+                  onChange={(v) => handleChange("utr", v)}
                 />
 
                 {screenshot && (

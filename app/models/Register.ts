@@ -7,6 +7,7 @@ const RegisterSchema = new mongoose.Schema(
     email: String,
     ieeeId: String,
     screenshot: String,
+    utr: String,
   },
   { timestamps: true },
 );

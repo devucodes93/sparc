@@ -13,6 +13,7 @@ export async function POST(req: Request) {
     const email = formData.get("email") as string;
     const ieeeId = formData.get("ieeeId") as string;
     const screenshotFile = formData.get("screenshot") as File | null;
+    const utr = formData.get("utr") as string;
     let uploadResponse;
 
     if (screenshotFile) {
@@ -37,6 +38,7 @@ export async function POST(req: Request) {
       email,
       ieeeId,
       screenshot: uploadResponse?.secure_url,
+      utr,
     });
 
     return NextResponse.json({
