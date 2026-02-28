@@ -20,18 +20,30 @@ export default function SuccessPage() {
   return (
     <div className="min-h-screen bg-[#05070b] text-white flex flex-col overflow-x-hidden">
       {/* NAVBAR */}
-      <nav className="fixed top-0 w-full bg-[#060b12]/80 backdrop-blur-xl border-b border-sky-900/40 py-4 px-6 md:px-10 z-50">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <span
-            className={`font-bold text-lg md:text-xl cursor-pointer ${orbitron.className}`}
-            onClick={() => router.push("/")}
+      <nav
+        className={`fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-xl px-6 py-2 border-b border-white/5`}
+      >
+        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-17">
+          {/* LOGO SECTION */}
+          <div
+            className="flex items-center gap-3 cursor-pointer"
+            onClick={() => {
+              router.push("/");
+            }}
           >
-            SP<span className="text-sky-500">AR</span>C
-          </span>
-
-          <span className="text-xs md:text-sm text-gray-400 uppercase tracking-widest">
-            Registration Success
-          </span>
+            <div className="flex items-center">
+              <img
+                src="/spslogo.png"
+                alt="SPS Logo"
+                className="h-14 w-auto object-contain scale-110"
+              />
+            </div>
+            <span
+              className={`text-xl md:text-2xl font-black tracking-tighter ${orbitron.className}`}
+            >
+              SP<span className="text-sky-500">AR</span>C
+            </span>
+          </div>
         </div>
       </nav>
 

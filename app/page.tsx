@@ -57,7 +57,7 @@ export default function ProfessionalEventPage() {
       id: 3,
       title: "Virtual CTF Based Challenge",
       subtitle: "",
-      points: ["Prize Pool: ₹20,000", "Date: 7th March"],
+      points: ["Prize Pool: ₹10,000", "Date: 7th March"],
     },
   ];
   return (
@@ -192,16 +192,17 @@ export default function ProfessionalEventPage() {
             <p className="text-xs uppercase tracking-[0.35em] text-sky-500">
               Organised By
             </p>
-            <div className="flex flex-row justify-center items-center gap-8 md:gap-12">
+            <div className="flex flex-row justify-center items-center gap-8 md:gap-16">
               <img
                 src="/SPS Bangalore Chapter.png"
                 alt=""
-                className="w-36 md:w-44 object-contain"
+                className="w-40 md:w-48 object-contain"
               />
+              {/* Increased size of second image here */}
               <img
                 src="/Bangalore-Section-Logo.png"
                 alt=""
-                className="w-36 md:w-44 object-contain"
+                className="w-48 md:w-64 object-contain"
               />
             </div>
           </div>
@@ -290,7 +291,7 @@ export default function ProfessionalEventPage() {
               {
                 id: 3,
                 title: "Virtual CTF Based Challenge",
-                points: ["Prize Pool: ₹20,000", "Date: 7th March"],
+                points: ["Prize Pool: ₹10,000", "Date: 7th March"],
               },
             ];
 
