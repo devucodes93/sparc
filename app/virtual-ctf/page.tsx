@@ -120,7 +120,6 @@ export default function VirtualCTFPage() {
             >
               SPARC 2026
             </div>
-
             <p className="text-sm max-w-sm">
               BMS Institute of Technology and Management
               <br />
@@ -129,9 +128,10 @@ export default function VirtualCTFPage() {
           </div>
 
           <div className="flex flex-col md:items-end gap-2 text-sm">
-            <p className="text-white font-bold">Contact Administration</p>
-            <p>sparc@bmsit.in</p>
-            <p>+91 96061 82802</p>
+            <p className="text-white font-bold">Contact</p>
+            <p>sparc.sps@gmail.com</p>
+            <p>bangalore-sps@ieee.org</p>
+            <p>Suraj: +91 96061 82802</p>
 
             <p className="mt-6 text-sky-500 font-black tracking-tighter">
               EXCELLENCE THROUGH INNOVATION

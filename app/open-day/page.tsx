@@ -73,18 +73,20 @@ export default function IeeeOpenDayPage() {
 
         <div className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-6 md:p-10 shadow-[0_0_40px_rgba(14,165,233,0.05)] space-y-6 text-gray-400 text-sm md:text-base leading-relaxed">
           <p>
-            IEEE Open Day is an interactive showcase hosted by Student Branch
-            Bmsit, designed to introduce students to the world of signal
-            processing through hands-on projects, live demos, and open
-            discussions.
+            IEEE Open Day is an interactive showcase hosted by the IEEE Student
+            Branch, BMS Institute of Technology & Management, aimed at
+            introducing students to the diverse technical domains within IEEE.
+            As part of IEEE Open Day, the IEEE Signal Processing Society (SPS)
+            will present interactive demonstrations and exhibits designed to
+            introduce students to the world of signal processing through
+            hands-on projects, live demos, and open discussions. This event
+            brings together technology enthusiasts, curious beginners, and core
+            engineering students to explore how signal processing powers
+            real-world systems — from audio and images to communications,
+            embedded systems, and AI.
           </p>
 
-          <p>
-            This event brings together technology enthusiasts, curious
-            beginners, and core engineering students to explore how signal
-            processing powers real-world systems — from audio and images to
-            communications, embedded systems, and AI.
-          </p>
+          <p></p>
         </div>
 
         {/* WHAT TO EXPECT */}
@@ -135,7 +137,6 @@ export default function IeeeOpenDayPage() {
             >
               SPARC 2026
             </div>
-
             <p className="text-sm max-w-sm">
               BMS Institute of Technology and Management
               <br />
@@ -144,9 +145,10 @@ export default function IeeeOpenDayPage() {
           </div>
 
           <div className="flex flex-col md:items-end gap-2 text-sm">
-            <p className="text-white font-bold">Contact Administration</p>
-            <p>sparc@bmsit.in</p>
-            <p>+91 96061 82802</p>
+            <p className="text-white font-bold">Contact</p>
+            <p>sparc.sps@gmail.com</p>
+            <p>bangalore-sps@ieee.org</p>
+            <p>Suraj: +91 96061 82802</p>
 
             <p className="mt-6 text-sky-500 font-black tracking-tighter">
               EXCELLENCE THROUGH INNOVATION

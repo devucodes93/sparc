@@ -24,7 +24,7 @@ export default function AdminPage() {
   /* ---------- LOGIN ---------- */
 
   const handleLogin = () => {
-    if (cred.username === "devendra" && cred.password === "devendra123") {
+    if (cred.username === "admin@sparc" && cred.password === "sparc@ieee") {
       setLoggedIn(true);
       fetchUsers();
     } else {
