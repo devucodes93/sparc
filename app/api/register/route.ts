@@ -16,50 +16,50 @@ export async function POST(req: Request) {
     const utr = formData.get("utr") as string;
     const memberType = formData.get("memberType") as string;
     const consentFile = formData.get("consentFile") as File | null;
-    let uploadResponse;
-    let consentUploadResponse;
-    if (screenshotFile) {
-      const buffer = Buffer.from(await screenshotFile.arrayBuffer());
-      const base64 = buffer.toString("base64");
 
-      const dataUrl = `data:${screenshotFile.type};base64,${base64}`;
+    if (!screenshotFile || !consentFile) {
+      return NextResponse.json(
+        { success: false, message: "Files are required" },
+        { status: 400 },
+      );
+    }
 
-      uploadResponse = await cloudinary.uploader.upload(dataUrl, {
+    // ---------- Upload Screenshot (Image Only) ----------
+    const screenshotBuffer = Buffer.from(await screenshotFile.arrayBuffer());
+    const screenshotBase64 = screenshotBuffer.toString("base64");
+
+    const screenshotUpload = await cloudinary.uploader.upload(
+      `data:${screenshotFile.type};base64,${screenshotBase64}`,
+      {
         folder: "registrations",
-      });
-    }
-    if (consentFile) {
-      const buffer = Buffer.from(await consentFile.arrayBuffer());
-      const base64 = buffer.toString("base64");
-      const dataUrl = `data:${consentFile.type};base64,${base64}`;
-      consentUploadResponse = await cloudinary.uploader.upload(dataUrl, {
+        resource_type: "image",
+      },
+    );
+
+    // ---------- Upload Consent (Image OR PDF) ----------
+    const consentBuffer = Buffer.from(await consentFile.arrayBuffer());
+    const consentBase64 = consentBuffer.toString("base64");
+
+    const consentUpload = await cloudinary.uploader.upload(
+      `data:${consentFile.type};base64,${consentBase64}`,
+      {
         folder: "consent-forms",
-      });
-    }
+        resource_type: "raw",
+        use_filename: true,
+        unique_filename: true,
+      },
+    );
 
-    if (!uploadResponse) {
-      return NextResponse.json(
-        { success: false, message: "Screenshot upload failed" },
-        { status: 400 },
-      );
-    }
-
-    if (!consentUploadResponse) {
-      return NextResponse.json(
-        { success: false, message: "Consent form upload failed" },
-        { status: 400 },
-      );
-    }
-
+    // ---------- Save to DB ----------
     const user = await Register.create({
       name,
       contact,
       email,
       ieeeId,
-      screenshot: uploadResponse?.secure_url,
+      screenshot: screenshotUpload.secure_url,
       utr,
       memberType,
-      consentForm: consentUploadResponse?.secure_url,
+      consentForm: consentUpload.secure_url,
     });
 
     return NextResponse.json({
@@ -67,7 +67,7 @@ export async function POST(req: Request) {
       data: user,
     });
   } catch (error) {
-    console.error(error);
+    console.error("POST error:", error);
 
     return NextResponse.json(
       { success: false, message: "Server error" },

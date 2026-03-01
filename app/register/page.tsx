@@ -124,10 +124,10 @@ export default function RegisterPage() {
   ) => {
     if (!file) return;
 
-    if (!allowedImageTypes.includes(file.type)) {
-      alert("Only PNG, JPG, JPEG, or WEBP images are allowed.");
-      return;
-    }
+    // if (!allowedImageTypes.includes(file.type)) {
+    //   alert("Only PNG, JPG, JPEG, or WEBP images are allowed.");
+    //   return;
+    // }
 
     setter(file);
   };
@@ -211,11 +211,11 @@ export default function RegisterPage() {
             {step === 2 && (
               <div className="space-y-5">
                 <label className="text-sm text-gray-300 block">
-                  Upload Consent Form (JPG/PNG/WEBP)
+                  Upload Consent Form (Only PDF)
                 </label>
                 <input
                   type="file"
-                  accept="image/png,image/jpeg,image/jpg,image/webp"
+                  // accept="image/png,image/jpeg,image/jpg,image/webp"
                   className="w-full text-sm text-gray-400 file:bg-sky-600 file:border-0 file:px-4 file:py-2 file:rounded-lg file:text-white cursor-pointer"
                   onChange={(e) =>
                     handleFileValidation(e.target.files?.[0], setConsentFile)

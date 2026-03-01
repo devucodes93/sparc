@@ -136,7 +136,7 @@ export default function AdminPage() {
 
               {user.consentForm && (
                 <div className="w-full md:w-[220px] h-[140px] flex items-center justify-center bg-[#0d131c] border border-sky-900/40 rounded-lg">
-                  {user.consentForm.toLowerCase().endsWith(".pdf") ? (
+                  {user.consentForm.toLowerCase().endsWith("") && (
                     <a
                       href={user.consentForm}
                       target="_blank"
@@ -144,23 +144,6 @@ export default function AdminPage() {
                     >
                       View Consent PDF
                     </a>
-                  ) : (
-                    <div
-                      className="relative cursor-pointer group w-full h-full"
-                      onClick={() => setSelectedImage(user.consentForm)}
-                    >
-                      <Image
-                        src={user.consentForm}
-                        alt="consent"
-                        fill
-                        className="rounded-lg object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition rounded-lg flex items-center justify-center">
-                        <span className="opacity-0 group-hover:opacity-100 text-white text-xs">
-                          Click to zoom
-                        </span>
-                      </div>
-                    </div>
                   )}
                 </div>
               )}
