@@ -90,7 +90,11 @@ export default function RegisterPage() {
 
     const formData = new FormData();
     Object.entries(form).forEach(([k, v]) => formData.append(k, v));
-
+    if (!screenshot || !consentFile) {
+      alert("Please upload the required files.");
+      setLoading(false);
+      return;
+    }
     if (screenshot) formData.append("screenshot", screenshot);
     if (consentFile) formData.append("consentFile", consentFile); // Send file to backend
     formData.append("memberType", memberType);
