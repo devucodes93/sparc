@@ -54,10 +54,9 @@ export default function RegisterPage() {
   const canNext =
     (step === 1 && step1Valid) ||
     (step === 2 && step2Valid) ||
-    (step === 3 && step3Valid) ||
-    step === 4;
+    (step === 3 && step3Valid);
 
-  const canSubmit = step === 5 && step5Valid;
+  const canSubmit = step === 4 && screenshot && form.utr;
 
   /* ---------- HANDLERS ---------- */
 
@@ -73,9 +72,8 @@ export default function RegisterPage() {
 
   const nextStep = () => {
     if (!canNext) return;
-    setStep((s) => Math.min(s + 1, 5));
+    setStep((s) => Math.min(s + 1, 4));
   };
-
   const prevStep = () => setStep((s) => Math.max(s - 1, 1));
 
   /* ---------- SUBMIT ---------- */
@@ -269,21 +267,21 @@ export default function RegisterPage() {
               </div>
             )}
 
-            {/* STEP 4: Payment */}
             {step === 4 && (
-              <div className="space-y-6 text-center">
+              <div className="space-y-1 text-center">
                 <p className="text-sky-500 text-xs uppercase tracking-widest">
                   Scan & Pay
                 </p>
+
                 <div className="flex justify-center">
-                  <div className=" p-4 rounded-xl">
+                  <div className=" rounded-xl">
                     {memberType === "sps" ? (
                       <Image
                         src="/sps-qr.jpeg"
                         alt="SPS Payment QR Code"
                         width={350}
                         height={350}
-                        className="w-74 h-74 object-contain"
+                        className="w-64 h-64 object-contain"
                       />
                     ) : (
                       <Image
@@ -291,39 +289,38 @@ export default function RegisterPage() {
                         alt="Non-SPS Payment QR Code"
                         width={350}
                         height={350}
-                        className="w-74 h-74 object-contain"
+                        className="w-64 h-64 object-contain"
                       />
                     )}
                   </div>
                 </div>
+
                 <p className="text-sm text-gray-400">
                   Amount :
                   <span className="text-sky-400 font-bold ml-2">
                     ₹{step4Amount}
                   </span>
                 </p>
-              </div>
-            )}
 
-            {/* STEP 5: Screenshot Upload */}
-            {step === 5 && (
-              <div className="space-y-5">
-                <label className="text-sm text-gray-300 block">
-                  Upload Payment Screenshot
-                </label>
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/jpg,image/webp"
-                  className="w-full text-sm text-gray-400 file:bg-sky-600 file:border-0 file:px-4 file:py-2 file:rounded-lg file:text-white cursor-pointer"
-                  onChange={(e) =>
-                    handleFileValidation(e.target.files?.[0], setScreenshot)
-                  }
-                />
-                <InputField
-                  label="UTR Number"
-                  value={form.utr}
-                  onChange={(v) => handleChange("utr", v)}
-                />
+                {/* Screenshot Upload */}
+                <div className="space-y-5 pt-6">
+                  <label className="text-sm text-gray-300 block">
+                    Upload Payment Screenshot
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg,image/webp"
+                    className="w-full text-sm text-gray-400 file:bg-sky-600 file:border-0 file:px-4 file:py-2 file:rounded-lg file:text-white cursor-pointer"
+                    onChange={(e) =>
+                      handleFileValidation(e.target.files?.[0], setScreenshot)
+                    }
+                  />
+                  <InputField
+                    label="UTR Number"
+                    value={form.utr}
+                    onChange={(v) => handleChange("utr", v)}
+                  />
+                </div>
               </div>
             )}
           </div>
@@ -342,7 +339,7 @@ export default function RegisterPage() {
               <div />
             )}
 
-            {step < 5 ? (
+            {step < 4 ? (
               <Button
                 className="bg-sky-600 hover:bg-sky-700 px-8 cursor-pointer"
                 onClick={nextStep}
