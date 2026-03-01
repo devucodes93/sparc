@@ -272,8 +272,24 @@ export default function RegisterPage() {
                   Scan & Pay
                 </p>
                 <div className="flex justify-center">
-                  <div className="bg-white p-4 rounded-xl">
-                    <Image src="/qr.jpg" alt="QR" width={220} height={220} />
+                  <div className=" p-4 rounded-xl">
+                    {memberType === "sps" ? (
+                      <Image
+                        src="/sps-qr.jpeg"
+                        alt="SPS Payment QR Code"
+                        width={350}
+                        height={350}
+                        className="w-74 h-74 object-contain"
+                      />
+                    ) : (
+                      <Image
+                        src="/non-sps-qr.jpeg"
+                        alt="Non-SPS Payment QR Code"
+                        width={350}
+                        height={350}
+                        className="w-74 h-74 object-contain"
+                      />
+                    )}
                   </div>
                 </div>
                 <p className="text-sm text-gray-400">

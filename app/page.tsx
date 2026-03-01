@@ -46,7 +46,7 @@ export default function ProfessionalEventPage() {
     },
     {
       id: 2,
-      title: "Deep Sky Observation Camp",
+      title: "Sky Full Of Stars",
       subtitle: "",
       points: [
         "Date: 14th to 15th March",
@@ -282,7 +282,8 @@ export default function ProfessionalEventPage() {
               },
               {
                 id: 2,
-                title: "Deep Sky Observation Camp",
+                title: "Sky Full Of Stars",
+
                 points: [
                   "Date: 14th to 15th March",
                   "Overnight camp stay at Urdigere near Devarayanadurga",

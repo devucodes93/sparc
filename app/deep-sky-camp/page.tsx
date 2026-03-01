@@ -55,7 +55,7 @@ export default function DeepSkyCampPage() {
           <h1
             className={`text-3xl sm:text-4xl md:text-6xl font-black leading-tight ${orbitron.className}`}
           >
-            Deep Sky Observation Camp
+            Sky Full Of Stars
           </h1>
 
           <p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed">
