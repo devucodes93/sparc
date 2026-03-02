@@ -213,7 +213,8 @@ export default function RegisterPage() {
                 </label>
                 <input
                   type="file"
-                  // accept="image/png,image/jpeg,image/jpg,image/webp"
+                  //accepts only PDF files
+                  accept="application/pdf"
                   className="w-full text-sm text-gray-400 file:bg-sky-600 file:border-0 file:px-4 file:py-2 file:rounded-lg file:text-white cursor-pointer"
                   onChange={(e) =>
                     handleFileValidation(e.target.files?.[0], setConsentFile)
