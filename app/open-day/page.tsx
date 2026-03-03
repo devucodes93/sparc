@@ -43,14 +43,14 @@ export default function IeeeOpenDayPage() {
           <img
             src="/clg-logo.png"
             alt="College Logo"
-            className="hidden md:block absolute -left-32 top-1/2 -translate-y-1/2 h-40 object-contain"
+            className="hidden md:block absolute -left-32 top-[5%] -translate-y-1/2 h-40 object-contain"
           />
 
           {/* RIGHT LOGO */}
           <img
             src="/stb-logo.png"
             alt="Student Branch Logo"
-            className="hidden md:block absolute -right-32 top-1/2 -translate-y-1/2 h-40 object-contain"
+            className="hidden md:block absolute -right-32 top-[5%] -translate-y-1/2 h-40 object-contain"
           />
 
           <p className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-sky-500 font-semibold">

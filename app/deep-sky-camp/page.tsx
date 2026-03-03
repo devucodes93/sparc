@@ -154,7 +154,10 @@ export default function DeepSkyCampPage() {
             ["9:00 AM", "Departure from campsite"],
             ["10:30 AM", "Visit to Jayamangali Blackbuck Reserve (optional)"],
             ["12:00 PM", "Lunch"],
-            ["12:30 PM", "Visit to Gauribidanur Radio Observatory"],
+            [
+              "12:30 PM",
+              "Visit to Gauribidanur Radio Observatory   (Tentative)",
+            ],
             ["2:00 PM", "Departure to Bangalore"],
             ["3:30 PM", "Drop at BMSIT Yelahanka"],
             ["4:30 PM", "Drop at Gorguntepalya Metro Station"],
@@ -190,12 +193,6 @@ export default function DeepSkyCampPage() {
                 Limited seats available for this exclusive astronomy experience.
                 Register now to be part of an unforgettable deep sky
                 exploration.
-              </p>
-
-              <p className="text-sm md:text-base font-semibold text-sky-500 animate-pulse transition-all duration-300">
-                {count === 0
-                  ? "No Registrations Yet"
-                  : `${count}/30 Registered`}
               </p>
 
               <div className="t-4 flex flex-col sm:flex-col items-center justify-center gap-4">

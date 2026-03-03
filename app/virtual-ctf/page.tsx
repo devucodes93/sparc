@@ -86,28 +86,35 @@ export default function VirtualCTFPage() {
           />
         </div>
         {/* FINAL DESCRIPTION */}
-        <section className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-6 md:p-10 shadow-[0_0_40px_rgba(14,165,233,0.05)]">
-          <p className="text-gray-400 text-sm sm:text-base md:text-lg leading-relaxed">
-            Each challenge presents a signal (audio, image, time-series, or
-            RF-like data) that contains a hidden flag. Participants must apply
-            signal processing techniques to extract it.
-          </p>
-        </section>{" "}
         <section className="text-center bg-gradient-to-br from-sky-900/10 to-transparent border border-sky-900/40 rounded-2xl px-6 py-10 md:px-14 md:py-16 space-y-6">
           <h2
             className={`text-2xl sm:text-3xl md:text-4xl font-black ${orbitron.className}`}
           >
-            Registration Opening Soon
+            Secure Your Spot
           </h2>
 
           <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
-            Stay tuned for registration updates. We look forward to welcoming
-            you to an engaging and insightful IEEE SPS experience.
+            Join the Virtual CTF – Signal Processing Edition and test your
+            analytical skills in a competitive, fully online environment.
           </p>
 
           <p className="text-sky-500 uppercase tracking-widest text-xs md:text-sm">
             March 21, 2026 • BMS Institute of Technology
           </p>
+
+          <div className="pt-4">
+            <Button
+              onClick={() =>
+                window.open(
+                  "https://unstop.com/p/sparc-virtual-ctf-on-signal-processing-bmsit-ieee-signal-processing-society-student-branch-1652195",
+                  "_blank",
+                )
+              }
+              className="bg-sky-500 hover:bg-sky-600 text-black font-bold px-8 py-6 text-sm md:text-base rounded-xl transition-all duration-300 cursor-pointer"
+            >
+              Register Now
+            </Button>
+          </div>
         </section>
       </main>
 
