@@ -45,6 +45,30 @@ export default function IeeeOpenDayPage() {
 
       {/* MAIN CONTENT */}
       <main className="pt-28 md:pt-36 pb-20 px-6 md:px-10 max-w-6xl mx-auto space-y-13 md:space-y-10">
+        {" "}
+        <section className="flex justify-center">
+          <div className="w-full max-w-3xl bg-[#0a1018] border border-sky-900/40 rounded-2xl py-8 px-6 md:px-12 shadow-[0_0_40px_rgba(14,165,233,0.05)]">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-10 md:gap-16">
+              <div className="group">
+                <img
+                  src="/clg-logo.png"
+                  alt="College Logo"
+                  className="h-30 md:h-34 object-contain opacity-80 group-hover:opacity-100 transition duration-300"
+                />
+              </div>
+
+              <div className="w-px h-16 bg-sky-900/40 hidden sm:block" />
+
+              <div className="group">
+                <img
+                  src="/stb-logo.png"
+                  alt="Student Branch Logo"
+                  className="h-30 md:h-34 object-contain opacity-80 group-hover:opacity-100 transition duration-300"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
         {/* HERO */}
         <section className="text-center space-y-6 border-b border-sky-900/30 pb-10 md:pb-14">
           <p className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-sky-500 font-semibold">
