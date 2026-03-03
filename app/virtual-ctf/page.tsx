@@ -59,11 +59,10 @@ export default function VirtualCTFPage() {
           <p className="text-gray-400 text-sm sm:text-base md:text-lg leading-relaxed">
             The Virtual Capture-The-Flag (CTF) challenge is an online,
             puzzle-based competition focused on signal processing concepts
-            hidden inside real-world signalsParticipants solve a challenging
+            hidden inside real-world signals. Participants solve a challenging
             problem by analyzing, decoding, and transforming signals to uncover
             the hidden flag.
           </p>
-
           <p className="text-gray-400 text-sm sm:text-base md:text-lg leading-relaxed">
             This CTF blends engineering intuition, math, and creative
             problem-solving, making signal processing fun, interactive, and
