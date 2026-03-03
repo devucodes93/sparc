@@ -17,7 +17,8 @@ export default function AdminPage() {
     username: "",
     password: "",
   });
-
+  const [warning, setWarning] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [users, setUsers] = useState<any[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -40,7 +41,18 @@ export default function AdminPage() {
     if (data.success) setUsers(data.data);
     setLoading(false);
   };
-
+  const handleDelete = async () => {
+    {
+      await fetch("/api/register", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: deleteId }),
+      });
+      fetchUsers();
+    }
+  };
   /* ---------- LOGIN UI ---------- */
 
   if (!loggedIn) {
@@ -70,7 +82,7 @@ export default function AdminPage() {
 
           <Button
             onClick={handleLogin}
-            className="w-full bg-sky-600 hover:bg-sky-700 py-5"
+            className="w-full bg-sky-600 hover:bg-sky-700 py-5 cursor-pointer"
           >
             Login
           </Button>
@@ -108,7 +120,10 @@ export default function AdminPage() {
           <p className="text-4xl font-bold text-white">{users.length}</p>
         </div>
 
-        <Button onClick={fetchUsers} className="bg-sky-600 hover:bg-sky-700">
+        <Button
+          onClick={fetchUsers}
+          className="bg-sky-600 hover:bg-sky-700 cursor-pointer"
+        >
           {loading ? "Refreshing..." : "Refresh List"}
         </Button>
 
@@ -132,6 +147,7 @@ export default function AdminPage() {
                 <p>
                   UTR :<span className="text-yellow-200">{user.utr}</span>
                 </p>
+                {/*delete */}
               </div>
 
               {user.consentForm && (
@@ -178,11 +194,49 @@ export default function AdminPage() {
                   )}
                 </div>
               )}
+              <Button
+                onClick={() => {
+                  setDeleteId(user._id);
+                  setWarning(true);
+                }}
+                className="bg-red-600 hover:bg-red-700 text-sm self-start md:self-auto cursor-pointer"
+              >
+                Delete
+              </Button>
             </div>
           ))}
         </div>
       </main>
-
+      {
+        //are you sure you want to delete this application? overlay full screen
+        //card like
+        warning && (
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-6">
+            <div className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-6 space-y-6 max-w-sm w-full text-center">
+              <h2 className="text-medium font-bold text-white">
+                Are you sure you want to delete this application?
+              </h2>
+              <div className="flex justify-center gap-6">
+                <Button
+                  onClick={() => {
+                    handleDelete();
+                    setWarning(false);
+                  }}
+                  className="bg-red-600 hover:bg-red-700 cursor-pointer text-sm"
+                >
+                  Yes, Delete
+                </Button>
+                <Button
+                  onClick={() => setWarning(false)}
+                  className="bg-gray-600 hover:bg-gray-700 cursor-pointer"
+                >
+                  No, Keep It
+                </Button>
+              </div>
+            </div>
+          </div>
+        )
+      }
       {/* IMAGE ZOOM MODAL */}
       {selectedImage && (
         <div

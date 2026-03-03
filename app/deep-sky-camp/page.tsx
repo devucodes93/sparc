@@ -3,11 +3,38 @@
 import { useRouter } from "next/navigation";
 import { Orbitron } from "next/font/google";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["700", "800"] });
 
 export default function DeepSkyCampPage() {
   const router = useRouter();
+  const [count, setCount] = useState(0);
+  const [countText, setCountText] = useState("");
+  useEffect(() => {
+    const gettingTotalCount = async () => {
+      try {
+        const res = await fetch("/api/count");
+        const data = await res.json();
+        setCount(data.data.totalCount);
+        console.log("Total Registrations:", data.data);
+      } catch (error) {
+        console.error("Error fetching total count:", error);
+      }
+    };
+    gettingTotalCount();
+  }, []);
+
+  useEffect(() => {
+    if (count > 30) {
+      setCountText("Registration Closed");
+    }
+    if (count === 0) {
+      setCountText("No Registrations Yet");
+    } else if (count > 0 && count <= 30) {
+      setCountText(`${count} Registered`);
+    }
+  }, [count]);
 
   return (
     <div className="min-h-screen bg-[#05070b] text-white overflow-x-hidden">
@@ -143,22 +170,32 @@ export default function DeepSkyCampPage() {
         />
 
         {/* CTA SECTION */}
-        <section className="text-center bg-gradient-to-br from-sky-900/10 to-transparent border border-sky-900/40 rounded-2xl px-6 py-10 md:px-14 md:py-16 space-y-6">
-          <h2
-            className={`text-2xl sm:text-3xl md:text-4xl font-black ${orbitron.className}`}
-          >
-            Secure Your Spot
-          </h2>
+        {count <= 30 ? (
+          <section className="text-center bg-gradient-to-br from-sky-900/10 to-transparent border border-sky-900/40 rounded-2xl px-6 py-10 md:px-14 md:py-16 space-y-6">
+            <h2
+              className={`text-2xl sm:text-3xl md:text-4xl font-black ${orbitron.className}`}
+            >
+              Secure Your Spot
+            </h2>
 
-          <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
-            Limited seats available for this exclusive astronomy experience.
-            Register now to be part of an unforgettable deep sky exploration.
-          </p>
-
-          <div className="pt-4 flex flex-col sm:flex-col items-center justify-center gap-4">
-            <Button
-              onClick={() => router.push("/register")}
-              className="
+            <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+              Limited seats available for this exclusive astronomy experience.
+              Register now to be part of an unforgettable deep sky exploration.
+            </p>
+            {/* Registration count text with cool animation and effect animations */}
+            <p
+              key={count}
+              className={`text-sm md:text-base font-semibold ${
+                count > 30 ? "text-red-500" : "text-sky-500"
+              } animate-pulse transition-all duration-300`}
+            >
+              {countText}
+            </p>
+            <div className="t-4 flex flex-col sm:flex-col items-center justify-center gap-4">
+              <Button
+                onClick={() => router.push("/register")}
+                disabled={count > 30}
+                className="
         w-full sm:w-auto
         bg-sky-600 hover:bg-sky-700
         text-white
@@ -172,20 +209,35 @@ export default function DeepSkyCampPage() {
         hover:scale-[1.02]
         cursor-pointer
       "
-            >
-              REGISTER FOR DEEP SKY CAMP
-            </Button>
+              >
+                REGISTER FOR DEEP SKY CAMP
+              </Button>
 
-            {/* link to download conscent form*/}
-            <a
-              href="/consent-form.pdf"
-              target="_blank"
-              className="ml-4 text-sm text-gray-400 underline"
+              {/* link to download conscent form*/}
+              <a
+                href="/consent-form.pdf"
+                target="_blank"
+                className="ml-4 text-sm text-gray-400 underline"
+              >
+                Download Consent Form
+              </a>
+            </div>
+          </section>
+        ) : (
+          <section className="text-center bg-gradient-to-br from-red-900/10 to-transparent border border-red-900/40 rounded-2xl px-6 py-10 md:px-14 md:py-16 space-y-6">
+            <h2
+              className={`text-2xl sm:text-3xl md:text-4xl font-black ${orbitron.className} text-red-500`}
             >
-              Download Consent Form
-            </a>
-          </div>
-        </section>
+              Registration Closed
+            </h2>
+            <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+              We have reached our maximum capacity of 30 registrations for the
+              Deep Sky Camp. Thank you for your overwhelming interest! Please
+              stay tuned for future events and opportunities to explore the
+              wonders of astronomy with us.
+            </p>
+          </section>
+        )}
       </main>
 
       {/* FOOTER */}

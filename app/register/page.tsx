@@ -1,7 +1,7 @@
 "use client";
 
 import { Orbitron } from "next/font/google";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -31,6 +31,7 @@ export default function RegisterPage() {
 
   const [screenshot, setScreenshot] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+
 
   /* ---------- VALIDATION ---------- */
 
@@ -129,8 +130,8 @@ export default function RegisterPage() {
 
     setter(file);
   };
-  /* ---------- UI ---------- */
 
+  
   return (
     <div className="min-h-screen bg-[#05070b] text-white flex flex-col">
       {/* NAVBAR */}

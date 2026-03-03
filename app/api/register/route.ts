@@ -95,3 +95,23 @@ export async function GET() {
     );
   }
 }
+export async function DELETE(req: Request) {
+  try {
+    await connectDb();
+    const body = await req.json();
+    const { id } = body;
+    await Register.findByIdAndDelete(id);
+
+    return NextResponse.json({
+      success: true,
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    console.error(error);
+
+    return NextResponse.json(
+      { success: false, message: "Server error" },
+      { status: 500 },
+    );
+  }
+}
