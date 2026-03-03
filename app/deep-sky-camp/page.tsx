@@ -10,14 +10,18 @@ const orbitron = Orbitron({ subsets: ["latin"], weight: ["700", "800"] });
 export default function DeepSkyCampPage() {
   const router = useRouter();
   const [count, setCount] = useState<number | null>(null);
+  const [fetchingCount, setFetchingCount] = useState(true);
   useEffect(() => {
     const gettingTotalCount = async () => {
       try {
+        setFetchingCount(true);
         const res = await fetch("/api/count");
         const data = await res.json();
         setCount(data.data);
         console.log("Total Registrations:", data.data);
+        setFetchingCount(false);
       } catch (error) {
+        setFetchingCount(false);
         console.error("Error fetching total count:", error);
       }
     };
@@ -159,6 +163,20 @@ export default function DeepSkyCampPage() {
 
         {/* CTA SECTION */}
         {/* CTA SECTION */}
+
+        {fetchingCount && (
+          <section className="text-center bg-gradient-to-br from-sky-900/10 to-transparent border border-sky-900/40 rounded-2xl px-6 py-10 md:px-14 md:py-16 space-y-6">
+            {/*loading animation */}
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-3 h-3 bg-sky-500 rounded-full animate-pulse" />
+              <div className="w-3 h-3 bg-sky-500 rounded-full animate-pulse animation-delay-200" />
+              <div className="w-3 h-3 bg-sky-500 rounded-full animate-pulse animation-delay-400" />
+            </div>
+            <p className="text-gray-400 text-sm md:text-base font-semibold animate-pulse">
+              Loading registration data...
+            </p>
+          </section>
+        )}
         {count !== null &&
           (count < 30 ? (
             <section className="text-center bg-gradient-to-br from-sky-900/10 to-transparent border border-sky-900/40 rounded-2xl px-6 py-10 md:px-14 md:py-16 space-y-6">
@@ -175,7 +193,9 @@ export default function DeepSkyCampPage() {
               </p>
 
               <p className="text-sm md:text-base font-semibold text-sky-500 animate-pulse transition-all duration-300">
-                {count === 0 ? "No Registrations Yet" : `${count}/30 Registered`}
+                {count === 0
+                  ? "No Registrations Yet"
+                  : `${count}/30 Registered`}
               </p>
 
               <div className="t-4 flex flex-col sm:flex-col items-center justify-center gap-4">
