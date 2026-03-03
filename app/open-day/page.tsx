@@ -9,26 +9,19 @@ export default function IeeeOpenDayPage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-[#05070b] text-white overflow-x-hidden ">
+    <div className="min-h-screen bg-[#05070b] text-white overflow-x-hidden">
       {/* NAVBAR */}
-      <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-xl px-6 py-2 border-b border-white/5`}
-      >
+      <nav className="fixed top-0 w-full z-50 backdrop-blur-xl px-6 py-2 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-17">
-          {/* LOGO SECTION */}
           <div
             className="flex items-center gap-3 cursor-pointer"
-            onClick={() => {
-              router.push("/");
-            }}
+            onClick={() => router.push("/")}
           >
-            <div className="flex items-center">
-              <img
-                src="/spslogo.png"
-                alt="SPS Logo"
-                className="h-14 w-auto object-contain scale-110"
-              />
-            </div>
+            <img
+              src="/spslogo.png"
+              alt="SPS Logo"
+              className="h-14 w-auto object-contain scale-110"
+            />
             <span
               className={`text-xl md:text-2xl font-black tracking-tighter ${orbitron.className}`}
             >
@@ -36,7 +29,6 @@ export default function IeeeOpenDayPage() {
             </span>
           </div>
 
-          {/* RIGHT SIDE TEXT */}
           <span className="text-xs md:text-sm text-gray-400 font-medium uppercase tracking-[0.2em]">
             IEEE Open Day
           </span>
@@ -44,33 +36,23 @@ export default function IeeeOpenDayPage() {
       </nav>
 
       {/* MAIN CONTENT */}
-      <main className="pt-28 md:pt-36 pb-20 px-6 md:px-10 max-w-6xl mx-auto space-y-13 md:space-y-10">
-        {" "}
-        <section className="flex justify-center">
-          <div className="w-full max-w-3xl bg-[#0a1018] border border-sky-900/40 rounded-2xl py-8 px-6 md:px-12 shadow-[0_0_40px_rgba(14,165,233,0.05)]">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-10 md:gap-16">
-              <div className="group">
-                <img
-                  src="/clg-logo.png"
-                  alt="College Logo"
-                  className="h-30 md:h-34 object-contain opacity-80 group-hover:opacity-100 transition duration-300"
-                />
-              </div>
+      <main className="pt-28 md:pt-36 pb-20 px-6 md:px-10 max-w-6xl mx-auto space-y-12 md:space-y-14">
+        {/* HERO WITH SIDE LOGOS */}
+        <section className="relative text-center space-y-6 border-b border-sky-900/30 pb-10 md:pb-14">
+          {/* LEFT LOGO */}
+          <img
+            src="/clg-logo.png"
+            alt="College Logo"
+            className="hidden md:block absolute -left-32 top-1/2 -translate-y-1/2 h-40 object-contain"
+          />
 
-              <div className="w-px h-16 bg-sky-900/40 hidden sm:block" />
+          {/* RIGHT LOGO */}
+          <img
+            src="/stb-logo.png"
+            alt="Student Branch Logo"
+            className="hidden md:block absolute -right-32 top-1/2 -translate-y-1/2 h-40 object-contain"
+          />
 
-              <div className="group">
-                <img
-                  src="/stb-logo.png"
-                  alt="Student Branch Logo"
-                  className="h-30 md:h-34 object-contain opacity-80 group-hover:opacity-100 transition duration-300"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* HERO */}
-        <section className="text-center space-y-6 border-b border-sky-900/30 pb-10 md:pb-14">
           <p className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-sky-500 font-semibold">
             SPARC 2026 Technical Showcase
           </p>
@@ -90,32 +72,11 @@ export default function IeeeOpenDayPage() {
           <p className="text-sky-500 uppercase tracking-widest text-xs md:text-sm">
             March 13, 2026
           </p>
-        </section>{" "}
-        <section className="flex justify-center">
-          <div className="w-full max-w-3xl bg-[#0a1018] border border-sky-900/40 rounded-2xl py-8 px-6 md:px-12 shadow-[0_0_40px_rgba(14,165,233,0.05)]">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-10 md:gap-16">
-              <div className="group">
-                <img
-                  src="/clg-logo.png"
-                  alt="College Logo"
-                  className="h-30 md:h-34 object-contain opacity-80 group-hover:opacity-100 transition duration-300"
-                />
-              </div>
-
-              <div className="w-px h-16 bg-sky-900/40 hidden sm:block" />
-
-              <div className="group">
-                <img
-                  src="/stb-logo.png"
-                  alt="Student Branch Logo"
-                  className="h-30 md:h-34 object-contain opacity-80 group-hover:opacity-100 transition duration-300"
-                />
-              </div>
-            </div>
-          </div>
         </section>
+
         {/* ABOUT */}
         <SectionTitle title="About the Event" orbitron={orbitron.className} />
+
         <div className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-6 md:p-10 shadow-[0_0_40px_rgba(14,165,233,0.05)] space-y-6 text-gray-400 text-sm md:text-base leading-relaxed">
           <p>
             IEEE Open Day is an interactive showcase hosted by the IEEE Student
@@ -130,11 +91,11 @@ export default function IeeeOpenDayPage() {
             real-world systems — from audio and images to communications,
             embedded systems, and AI.
           </p>
-
-          <p></p>
         </div>
+
         {/* WHAT TO EXPECT */}
         <SectionTitle title="What to Expect" orbitron={orbitron.className} />
+
         <div className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-6 md:p-10 space-y-6 shadow-[0_0_40px_rgba(14,165,233,0.05)]">
           {[
             [
@@ -143,11 +104,11 @@ export default function IeeeOpenDayPage() {
             ],
             [
               "Interactive Signal Processing Sessions",
-              "Understand signal processing concepts visually and intuitively through demos, simulations, and modular explanations — no heavy theory required.",
+              "Understand signal processing concepts visually and intuitively through demos and simulations, and modular explanations — no heavy theory required",
             ],
             [
               "Meet the SPS Team",
-              "Interact with the IEEE SPS student team, learn how projects are built, and understand how SPS operates as a technical community.",
+              "Interact with the IEEE SPS student team and learn how projects are built, and understand how SPS operates as a technical community.",
             ],
             [
               "Open Discussions & Q&A",
@@ -167,7 +128,6 @@ export default function IeeeOpenDayPage() {
             </div>
           ))}
         </div>
-        {/* CTA SECTION */}
       </main>
 
       {/* FOOTER */}
@@ -201,8 +161,6 @@ export default function IeeeOpenDayPage() {
     </div>
   );
 }
-
-/* ---------- SECTION TITLE COMPONENT ---------- */
 
 function SectionTitle({
   title,
