@@ -106,7 +106,7 @@ export default function VirtualCTFPage() {
           </p>
 
           <p className="text-sky-500 uppercase tracking-widest text-xs md:text-sm">
-            March 7, 2026 • BMS Institute of Technology
+            March 21, 2026 • BMS Institute of Technology
           </p>
         </section>
       </main>

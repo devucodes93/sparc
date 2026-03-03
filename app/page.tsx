@@ -292,7 +292,7 @@ export default function ProfessionalEventPage() {
               {
                 id: 3,
                 title: "Virtual CTF Based Challenge",
-                points: ["Prize Pool: ₹10,000", "Date: 7th March"],
+                points: ["Prize Pool: ₹10,000", "Date: 21st March"],
               },
             ];
 

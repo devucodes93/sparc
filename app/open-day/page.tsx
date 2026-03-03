@@ -66,11 +66,32 @@ export default function IeeeOpenDayPage() {
           <p className="text-sky-500 uppercase tracking-widest text-xs md:text-sm">
             March 13, 2026
           </p>
-        </section>
+        </section>{" "}
+        <section className="flex justify-center">
+          <div className="w-full max-w-3xl bg-[#0a1018] border border-sky-900/40 rounded-2xl py-8 px-6 md:px-12 shadow-[0_0_40px_rgba(14,165,233,0.05)]">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-10 md:gap-16">
+              <div className="group">
+                <img
+                  src="/clg-logo.png"
+                  alt="College Logo"
+                  className="h-30 md:h-34 object-contain opacity-80 group-hover:opacity-100 transition duration-300"
+                />
+              </div>
 
+              <div className="w-px h-16 bg-sky-900/40 hidden sm:block" />
+
+              <div className="group">
+                <img
+                  src="/stb-logo.png"
+                  alt="Student Branch Logo"
+                  className="h-30 md:h-34 object-contain opacity-80 group-hover:opacity-100 transition duration-300"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
         {/* ABOUT */}
         <SectionTitle title="About the Event" orbitron={orbitron.className} />
-
         <div className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-6 md:p-10 shadow-[0_0_40px_rgba(14,165,233,0.05)] space-y-6 text-gray-400 text-sm md:text-base leading-relaxed">
           <p>
             IEEE Open Day is an interactive showcase hosted by the IEEE Student
@@ -88,10 +109,8 @@ export default function IeeeOpenDayPage() {
 
           <p></p>
         </div>
-
         {/* WHAT TO EXPECT */}
         <SectionTitle title="What to Expect" orbitron={orbitron.className} />
-
         <div className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-6 md:p-10 space-y-6 shadow-[0_0_40px_rgba(14,165,233,0.05)]">
           {[
             [
@@ -124,7 +143,6 @@ export default function IeeeOpenDayPage() {
             </div>
           ))}
         </div>
-
         {/* CTA SECTION */}
       </main>
 
