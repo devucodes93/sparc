@@ -29,7 +29,7 @@ export default function IeeeOpenDayPage() {
             </span>
           </div>
 
-          <span className="text-xs md:text-sm text-gray-400 font-medium uppercase tracking-[0.2em]">
+          <span className="text-xs md:text-sm text-gray-400 font-medium uppercase tracking-[0.2em] ml-20">
             IEEE Open Day
           </span>
         </div>
@@ -39,14 +39,28 @@ export default function IeeeOpenDayPage() {
       <main className="pt-28 md:pt-36 pb-20 px-6 md:px-10 max-w-6xl mx-auto space-y-12 md:space-y-14">
         {/* HERO WITH SIDE LOGOS */}
         <section className="relative text-center space-y-6 border-b border-sky-900/30 pb-10 md:pb-14">
-          {/* LEFT LOGO */}
+          {/* MOBILE TOP LOGOS */}
+          <div className="flex md:hidden justify-center items-center gap-1 ">
+            <img
+              src="/clg-logo.png"
+              alt="College Logo"
+              className="h-30 object-contain"
+            />
+            <img
+              src="/stb-logo.png"
+              alt="Student Branch Logo"
+              className="h-30 object-contain"
+            />
+          </div>
+
+          {/* DESKTOP LEFT LOGO */}
           <img
             src="/clg-logo.png"
             alt="College Logo"
             className="hidden md:block absolute -left-32 top-[5%] -translate-y-1/2 h-40 object-contain"
           />
 
-          {/* RIGHT LOGO */}
+          {/* DESKTOP RIGHT LOGO */}
           <img
             src="/stb-logo.png"
             alt="Student Branch Logo"

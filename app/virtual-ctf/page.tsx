@@ -38,7 +38,7 @@ export default function VirtualCTFPage() {
           </div>
 
           {/* RIGHT SIDE TEXT */}
-          <span className="text-xs md:text-sm text-gray-400 font-medium uppercase tracking-[0.2em]">
+          <span className="text-xs md:text-sm text-gray-400 font-medium uppercase tracking-[0.2em] ml-2">
             Virtual CTF
           </span>
         </div>
