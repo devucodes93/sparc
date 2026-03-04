@@ -156,7 +156,7 @@ export default function DeepSkyCampPage() {
             ["12:00 PM", "Lunch"],
             [
               "12:30 PM",
-              "Visit to Gauribidanur Radio Observatory   (Tentative)",
+              "Visit to Gauribidanur Radio Observatory\n(Tentative – The Gauribidanur visit is tentative and subject to staff confirmation. In case it is cancelled, we will proceed directly to Bangalore and skip lunch on the second day.)",
             ],
             ["2:00 PM", "Departure to Bangalore"],
             ["3:30 PM", "Drop at BMSIT Yelahanka"],
@@ -296,7 +296,7 @@ function Timeline({ items }: { items: [string, string][] }) {
             {time}
           </span>
 
-          <span className="text-gray-400 text-sm md:text-base mt-1 sm:mt-0">
+          <span className="text-gray-400 text-sm md:text-base mt-1 sm:mt-0 whitespace-pre-line">
             {text}
           </span>
         </div>
