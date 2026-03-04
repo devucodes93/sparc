@@ -40,7 +40,12 @@ export default function RegisterPage() {
   const contactValid = form.contact.length === 0 || form.contact.length === 10;
 
   const step1Valid =
-    form.name && form.contact && form.email && emailValid && contactValid && form.college; // College is required in step 1
+    form.name &&
+    form.contact &&
+    form.email &&
+    emailValid &&
+    contactValid &&
+    form.college; // College is required in step 1
 
   const step2Valid = consentFile !== null; // Consent step validation
 
@@ -224,7 +229,7 @@ export default function RegisterPage() {
                 />{" "}
                 <InputField
                   label="College Name"
-                  value={form.email}
+                  value={form.college}
                   onChange={(v) => handleChange("college", v)}
                 />
                 {!emailValid && form.email && (
