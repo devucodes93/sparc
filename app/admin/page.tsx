@@ -240,16 +240,15 @@ export default function AdminPage() {
       {/* IMAGE ZOOM MODAL */}
       {selectedImage && (
         <div
-          className="fixed inset-0 bg-black/100 flex items-center justify-center z-50 p-6"
+          className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedImage(null)}
         >
-          <div className="relative max-w-4xl w-full">
+          <div className="relative w-full max-w-4xl h-[90vh]">
             <Image
               src={selectedImage}
               alt="zoom"
-              width={900}
-              height={700}
-              className="rounded-xl w-full object-contain"
+              fill
+              className="object-contain rounded-xl"
             />
 
             <button
