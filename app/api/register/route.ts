@@ -16,6 +16,7 @@ export async function POST(req: Request) {
     const utr = formData.get("utr") as string;
     const memberType = formData.get("memberType") as string;
     const consentFile = formData.get("consentFile") as File | null;
+    const college = formData.get("college") as string;
 
     if (!screenshotFile || !consentFile) {
       return NextResponse.json(
@@ -60,6 +61,7 @@ export async function POST(req: Request) {
       utr,
       memberType,
       consentForm: consentUpload.secure_url,
+      college,
     });
 
     return NextResponse.json({

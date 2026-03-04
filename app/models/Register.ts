@@ -10,6 +10,7 @@ const RegisterSchema = new mongoose.Schema(
     utr: String,
     memberType: String,
     consentForm: String,
+    college: String,
   },
   { timestamps: true },
 );

@@ -132,7 +132,7 @@ export default function AdminPage() {
           {users.map((user, index) => (
             <div
               key={index}
-              className="flex flex-col md:flex-row justify-between items-start md:items-center bg-[#0a1018] border border-sky-900/40 rounded-xl p-6 md:h-[200px] hover:border-sky-500 transition gap-6"
+              className="flex flex-col md:flex-row justify-between items-start md:items-center bg-[#0a1018] border border-sky-900/40 rounded-xl p-8 md:h-[250px] hover:border-sky-500 transition gap-6 "
             >
               <div className="space-y-2 text-sm text-gray-300 flex-1">
                 <p className="font-semibold text-white text-lg">{user.name}</p>
@@ -142,6 +142,10 @@ export default function AdminPage() {
                 <p>
                   Member Type :{" "}
                   <span className="text-sky-500">{user.memberType}</span>
+                </p>
+                <p>
+                  College :{" "}
+                  <span className="text-yellow-200">{user.college}</span>
                 </p>
                 {<p>IEEE ID : {user.ieeeId ? user.ieeeId : "---"}</p>}
                 <p>

@@ -27,6 +27,7 @@ export default function RegisterPage() {
     email: "",
     ieeeId: "",
     utr: "",
+    college: "",
   });
 
   const [screenshot, setScreenshot] = useState<File | null>(null);
@@ -39,7 +40,7 @@ export default function RegisterPage() {
   const contactValid = form.contact.length === 0 || form.contact.length === 10;
 
   const step1Valid =
-    form.name && form.contact && form.email && emailValid && contactValid;
+    form.name && form.contact && form.email && emailValid && contactValid && form.college; // College is required in step 1
 
   const step2Valid = consentFile !== null; // Consent step validation
 
@@ -220,6 +221,11 @@ export default function RegisterPage() {
                   label="Email ID"
                   value={form.email}
                   onChange={(v) => handleChange("email", v)}
+                />{" "}
+                <InputField
+                  label="College Name"
+                  value={form.email}
+                  onChange={(v) => handleChange("college", v)}
                 />
                 {!emailValid && form.email && (
                   <p className="text-red-400 text-xs">Enter valid email</p>
