@@ -105,7 +105,7 @@ export default function VirtualCTFPage() {
             <Button
               onClick={() =>
                 window.open(
-                  "https://unstop.com/p/sparc-virtual-ctf-on-signal-processing-bmsit-ieee-signal-processing-society-student-branch-1652195",
+                  "https://unstop.com/p/sparc-signal-processing-based-virtual-ctf-ieee-bmsit-signal-processing-society-1652417",
                   "_blank",
                 )
               }
