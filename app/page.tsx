@@ -164,7 +164,7 @@ export default function ProfessionalEventPage() {
           </h1>
 
           <p className="max-w-m mx-auto text-gray-400 text-lg md:text-xl font-light tracking-wide mb-12 uppercase italic">
-            Signal Processing & Astronomical Research Camp
+            Signal Processing & Astronomical Radio Camp
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -233,7 +233,7 @@ export default function ProfessionalEventPage() {
             <div className="w-20 h-1 bg-sky-500" />
 
             <p className="text-gray-400 leading-relaxed text-lg italic font-serif">
-              “S.P.A.R.C. – Signal Processing & Astronomical Research Camp”
+              “S.P.A.R.C. – Signal Processing & Astronomical Radio Camp”
             </p>
           </div>
 
