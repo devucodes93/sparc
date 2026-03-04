@@ -32,7 +32,6 @@ export default function RegisterPage() {
   const [screenshot, setScreenshot] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
-
   /* ---------- VALIDATION ---------- */
 
   const emailValid = form.email === "" || /^[^\s@]+@[^\s@]+$/.test(form.email);
@@ -131,7 +130,29 @@ export default function RegisterPage() {
     setter(file);
   };
 
-  
+  const [count, setCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    const gettingTotalCount = async () => {
+      try {
+        const res = await fetch("/api/count");
+        const data = await res.json();
+        setCount(data.data);
+        console.log("Total Registrations:", data.data);
+      } catch (error) {
+        console.error("Error fetching total count:", error);
+      }
+    };
+    gettingTotalCount();
+  }, []);
+  useEffect(() => {
+    if (count && count >= 30) {
+      alert(
+        "Registrations are full. Please contact the organizers for more information.",
+      );
+      router.push("/");
+    }
+  }, [count]);
   return (
     <div className="min-h-screen bg-[#05070b] text-white flex flex-col">
       {/* NAVBAR */}
