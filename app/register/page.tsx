@@ -241,8 +241,10 @@ export default function RegisterPage() {
             {/* STEP 2: Consent Form (New) */}
             {step === 2 && (
               <div className="space-y-5">
+                {/* accept only file less than 5mb */}
+
                 <label className="text-sm text-gray-300 block">
-                  Upload Consent Form (Only PDF)
+                  Upload Consent Form (PDF only, maximum 5 MB)
                 </label>
                 <input
                   type="file"
