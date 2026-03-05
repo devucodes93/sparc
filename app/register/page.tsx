@@ -291,7 +291,7 @@ export default function RegisterPage() {
                       target="_blank"
                       className="text-sky-400 text-sm underline block"
                     >
-                      Check activity status of your membership here
+                      Check your membership status
                     </a>
                     <InputField
                       label="IEEE Membership ID"

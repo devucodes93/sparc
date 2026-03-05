@@ -161,7 +161,32 @@ export default function DeepSkyCampPage() {
           ]}
         />
 
-        {/* CTA SECTION */}
+        {/* FEE DETAILS */}
+        <SectionTitle title="Registration Fee" orbitron={orbitron.className} />
+
+        <div className="grid sm:grid-cols-2 gap-6">
+          <div className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-8 text-center space-y-4 hover:scale-[1.02] transition duration-300">
+            <h3 className="text-sky-500 font-semibold text-lg ">SPS Members</h3>
+
+            <p
+              className={`${"text-3xl font-black text-white"} ${orbitron.className}`}
+            >
+              ₹ 1000
+            </p>
+          </div>
+
+          <div className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-8 text-center space-y-4 hover:scale-[1.02] transition duration-300">
+            <h3 className="text-sky-500 font-semibold text-lg">
+              Non-SPS Members
+            </h3>
+
+            <p
+              className={`${"text-3xl font-black text-white"} ${orbitron.className}`}
+            >
+              ₹ 2000
+            </p>
+          </div>
+        </div>
         {/* CTA SECTION */}
 
         {count < 30 ? (
