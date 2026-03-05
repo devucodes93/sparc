@@ -161,7 +161,7 @@ export default function DeepSkyCampPage() {
           ]}
         />
 
-        {/* FEE DETAILS */}
+       
         <SectionTitle title="Registration Fee" orbitron={orbitron.className} />
 
         <div className="grid sm:grid-cols-2 gap-6">
