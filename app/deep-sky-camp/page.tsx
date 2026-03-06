@@ -161,27 +161,36 @@ export default function DeepSkyCampPage() {
           ]}
         />
 
-       
         <SectionTitle title="Registration Fee" orbitron={orbitron.className} />
 
         <div className="grid sm:grid-cols-2 gap-6">
-          <div className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-8 text-center space-y-4 hover:scale-[1.02] transition duration-300">
-            <h3 className="text-sky-500 font-semibold text-lg ">SPS Members</h3>
+          <div className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-8 text-center space-y-2 hover:scale-[1.02] transition duration-300">
+            <h3 className="text-sky-500 font-semibold text-lg">SPS Members</h3>
+
+            <div className="relative inline-block">
+              <p className="text-gray-400 text-lg px-2">₹ 4650</p>
+              <span className="absolute left-0 right-0 top-1/2 h-[1px] bg-red-500"></span>
+            </div>
 
             <p
-              className={`${"text-3xl font-black text-white"} ${orbitron.className}`}
+              className={`text-3xl font-black text-white ${orbitron.className}`}
             >
               ₹ 1000
             </p>
           </div>
 
-          <div className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-8 text-center space-y-4 hover:scale-[1.02] transition duration-300">
+          <div className="bg-[#0a1018] border border-sky-900/40 rounded-xl p-8 text-center space-y-2 hover:scale-[1.02] transition duration-300">
             <h3 className="text-sky-500 font-semibold text-lg">
               Non-SPS Members
             </h3>
 
+            <div className="relative inline-block">
+              <p className="text-gray-400 text-lg px-2">₹ 4650</p>
+              <span className="absolute left-0 right-0 top-1/2 h-[1px] bg-red-500"></span>
+            </div>
+
             <p
-              className={`${"text-3xl font-black text-white"} ${orbitron.className}`}
+              className={`text-3xl font-black text-white ${orbitron.className}`}
             >
               ₹ 2000
             </p>
