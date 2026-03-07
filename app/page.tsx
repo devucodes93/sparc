@@ -9,6 +9,12 @@ import { useRouter } from "next/navigation";
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["700", "800"] });
 
 export default function ProfessionalEventPage() {
+  useEffect(() => {
+    // Increment visit count on page load
+    fetch("/api/visits", { method: "PUT" }).catch((error) =>
+      console.error("Error updating visit count:", error),
+    );
+  }, []);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
