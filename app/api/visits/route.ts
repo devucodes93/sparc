@@ -1,6 +1,8 @@
+import { connectDb } from "@/app/lib/db";
 import Visits from "@/app/models/visits";
 
 export async function PUT(req: Request) {
+  connectDb();
   try {
     await Visits.findOneAndUpdate(
       {}, // find any document
