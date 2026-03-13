@@ -198,53 +198,20 @@ export default function DeepSkyCampPage() {
         </div>
         {/* CTA SECTION */}
 
-        {count < 30 ? (
-          <section className="text-center bg-gradient-to-br from-sky-900/10 to-transparent border border-sky-900/40 rounded-2xl px-6 py-10 md:px-14 md:py-16 space-y-6">
-            <h2
-              className={`text-2xl sm:text-3xl md:text-4xl font-black ${orbitron.className}`}
-            >
-              Secure Your Spot
-            </h2>
+        <section className="text-center bg-gradient-to-br from-red-900/10 to-transparent border border-red-900/40 rounded-2xl px-6 py-10 md:px-14 md:py-16 space-y-6">
+          <h2
+            className={`text-2xl sm:text-3xl md:text-4xl font-black ${orbitron.className} text-red-500`}
+          >
+            Registration Closed
+          </h2>
 
-            <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
-              Limited seats available for this exclusive astronomy experience.
-              Register now to be part of an unforgettable deep sky exploration.
-            </p>
-
-            <div className="t-4 flex flex-col sm:flex-col items-center justify-center gap-4">
-              <Button
-                onClick={() => router.push("/register")}
-                disabled={count >= 30}
-                className="w-full sm:w-auto bg-sky-600 hover:bg-sky-700 text-white px-6 sm:px-10 py-4 rounded-lg font-bold tracking-wide sm:tracking-widest text-sm sm:text-base transition-all duration-300 hover:scale-[1.02] cursor-pointer"
-              >
-                REGISTER FOR DEEP SKY CAMP
-              </Button>
-
-              <a
-                href="/consent-form.pdf"
-                target="_blank"
-                className="ml-4 text-sm text-gray-400 underline"
-              >
-                Download Consent Form
-              </a>
-            </div>
-          </section>
-        ) : (
-          <section className="text-center bg-gradient-to-br from-red-900/10 to-transparent border border-red-900/40 rounded-2xl px-6 py-10 md:px-14 md:py-16 space-y-6">
-            <h2
-              className={`text-2xl sm:text-3xl md:text-4xl font-black ${orbitron.className} text-red-500`}
-            >
-              Registration Closed
-            </h2>
-
-            <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
-              We have reached our maximum capacity of 30 registrations for this
-              event. Thank you for your overwhelming interest! Please stay tuned
-              for future events and opportunities to explore the wonders of
-              astronomy with us.
-            </p>
-          </section>
-        )}
+          <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+            We have reached our maximum capacity of 30 registrations for this
+            event. Thank you for your overwhelming interest! Please stay tuned
+            for future events and opportunities to explore the wonders of
+            astronomy with us.
+          </p>
+        </section>
       </main>
 
       {/* FOOTER */}
