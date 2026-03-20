@@ -13,7 +13,7 @@ const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndndG91dmJham93cXJkcm12Y3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4OTg0MTUsImV4cCI6MjA4OTQ3NDQxNX0.lLPTRfi_sKe5uxPWBp_agIPCYroaAduV8LH67jPMrhY",
 );
 export default function Page() {
-  const targetDate = new Date("2026-03-21T09:00:00");
+  const targetDate = new Date("2026-03-20T09:00:00");
   const [timeLeft, setTimeLeft] = useState<any>(null);
   const [started, setStarted] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -21,7 +21,6 @@ export default function Page() {
   const [showNotice, setShowNotice] = useState(false);
 
   useEffect(() => {
-   
     const timer = setTimeout(() => setShowNotice(true), 1500);
     return () => clearTimeout(timer);
   }, []);
@@ -30,7 +29,6 @@ export default function Page() {
     if (error) {
       console.error("Logout error:", error.message);
     } else {
- 
       localStorage.clear();
       router.push("/ctf/login");
     }
@@ -42,10 +40,8 @@ export default function Page() {
       } = await supabase.auth.getSession();
 
       if (session) {
-     
         router.push("/ctf/dashboard");
       } else {
-      
         router.push("/ctf/login");
       }
     };
@@ -76,7 +72,6 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-[#05070b] text-white flex items-center justify-center px-6 relative overflow-hidden">
-  
       <nav className="fixed top-0 w-full z-50 backdrop-blur-xl px-6 py-2 border-b border-white/5">
         <div className="max-w-7xl mx-auto flex justify-between items-center h-16">
           <div
@@ -111,10 +106,8 @@ export default function Page() {
       {showNotice && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
           <div className="w-full max-w-xl bg-[#0a1018] border border-sky-500/20 p-10 rounded-2xl shadow-2xl relative overflow-hidden">
-          
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-sky-500 to-transparent opacity-50" />
 
-       
             <button
               onClick={() => setShowNotice(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
@@ -123,7 +116,6 @@ export default function Page() {
             </button>
 
             <div className="text-center space-y-6">
-            
               <div className="space-y-2">
                 <h3
                   className={`text-3xl font-black tracking-tighter ${orbitron.className}`}
@@ -135,12 +127,18 @@ export default function Page() {
                 </p>
               </div>
 
-              
               <div className="space-y-4 text-left pt-4">
                 <p className="text-[10px] font-black text-sky-500 uppercase tracking-[0.3em] mb-2">
                   Participant Rules
                 </p>
-                {["Adding soon"].map((text, i) => (
+                {[
+                  "The competition will be accessible from 9:00 AM on 21st March to 11:59 PM on 22nd March. Participants may attempt challenges at any time within this window.",
+                  "The CTF consists of 4 puzzles. If the top 3 teams successfully solve all 4 puzzles, the competition will officially conclude early. Even after early termination, other participants may continue solving challenges.",
+                  "If no team solves all puzzles by 11:59 PM on 22nd March, the top 3 teams on the leaderboard will be declared winners. Rankings are determined based on number of puzzles solved and time taken.",
+                  "If two or more teams solve the same number of challenges, the team that achieved it in the least amount of time will rank higher.",
+                  "Participants will have access to a live leaderboard displaying the top 10 teams.",
+                  "Hints will be released at regular intervals. Participants can access them via the Hint Logs section (💡 icon).",
+                ].map((text, i) => (
                   <div
                     key={i}
                     className="flex items-start gap-4 bg-white/5 p-5 rounded-xl border border-white/10 hover:border-sky-500/30 transition-all"
@@ -154,18 +152,13 @@ export default function Page() {
                   </div>
                 ))}
               </div>
-
-            
             </div>
           </div>
         </div>
       )}
-     
       <div className="absolute w-[500px] h-[500px] bg-sky-500/10 blur-[120px] rounded-full top-[-100px] left-[-100px]" />
       <div className="absolute w-[400px] h-[400px] bg-purple-500/10 blur-[120px] rounded-full bottom-[-100px] right-[-100px]" />
-     
       <div className="w-full max-w-2xl text-center space-y-10 z-10">
-       
         <div className="space-y-4">
           <h1
             className={`text-4xl md:text-6xl font-black ${orbitron.className}`}
@@ -178,7 +171,6 @@ export default function Page() {
           </p>
         </div>
 
-        
         {!started ? (
           <>
             <p className="text-gray-400 uppercase tracking-widest text-xs">

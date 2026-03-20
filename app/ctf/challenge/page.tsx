@@ -26,6 +26,7 @@ interface Team {
   q1_time?: number;
   q2_time?: number;
   q3_time?: number;
+  q4_time?: number;
   total_time?: number;
   last_answered_at?: string;
 }
@@ -56,6 +57,7 @@ export default function QuizPage() {
   const [isHintsOpen, setIsHintsOpen] = useState(false);
   const [settingsData, setSettingsData] = useState<any>(null);
   const [cooldown, setCooldown] = useState(0);
+  const [actualUserRank, setActualUserRank] = useState<number | null>(null);
   useEffect(() => {
     if (cooldown > 0) {
       const timer = setTimeout(() => setCooldown(cooldown - 1), 1000);
@@ -87,7 +89,7 @@ export default function QuizPage() {
       setUser(data.user);
       const { data: settings } = await supabase
         .from("settings")
-        .select("q1_clue, q2_clue, q3_clue")
+        .select("q1_clue, q2_clue, q3_clue,q4_clue")
         .single();
       if (settings) {
         setSettingsData(settings);
@@ -105,10 +107,15 @@ export default function QuizPage() {
         .maybeSingle();
       const userIdx = progress?.current_question || 1;
 
-   
       if (userIdx === 1) {
-        localStorage.setItem("qst_asesr4fgd54w53r2436543435433356", Date.now().toString());
-        localStorage.setItem("qstart_3374rgewhgfdhgf84tyruir", Date.now().toString());
+        localStorage.setItem(
+          "qst_asesr4fgd54w53r2436543435433356",
+          Date.now().toString(),
+        );
+        localStorage.setItem(
+          "qstart_3374rgewhgfdhgf84tyruir",
+          Date.now().toString(),
+        );
       }
 
       if (userIdx > total && total > 0 && !eventClosed) {
@@ -119,7 +126,7 @@ export default function QuizPage() {
       }
 
       setFinishedAfterClose(localStorage.getItem("fb_fool") === "true");
-      await loadQuestion(data.user.id);
+      await loadQuestion(data.user.id, total);
       await fetchLeaderboard();
       setIsInitialLoading(false);
     };
@@ -139,7 +146,9 @@ export default function QuizPage() {
     checkSession();
   }, [router, current]);
 
-  const loadQuestion = async (userId: string) => {
+  const loadQuestion = async (userId: string, total?: number) => {
+    const limit = total ?? totalQuestions; // MOVED TO TOP
+
     const { data: progress } = await supabase
       .from("progress")
       .select("current_question")
@@ -148,8 +157,8 @@ export default function QuizPage() {
 
     const nextIndex = progress?.current_question || 1;
 
-   
-    if (totalQuestions > 0 && nextIndex > totalQuestions) {
+    if (limit > 0 && nextIndex > limit) {
+      // CHANGED totalQuestions → limit
       setQuestion(null);
       setFinishedBefore(true);
       return;
@@ -167,7 +176,6 @@ export default function QuizPage() {
       setCurrent(qData.order_index);
     } else {
       setQuestion(null);
-   
       if (nextIndex > 1) setFinishedBefore(true);
     }
   };
@@ -177,122 +185,137 @@ export default function QuizPage() {
     const secs = Math.floor((ms % 60000) / 1000);
     return `${mins}m ${secs}s`;
   };
+  const isFetching = useRef(false);
+  const userRef = useRef(user);
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
   const fetchLeaderboard = async () => {
-    const { data, error } = await supabase.from("progress").select(`
-      user_id,
-      score,
-      q1_time,
-      q2_time,
-      q3_time,
-      total_time,
-      last_answered_at,
-      users ( name )
-    `);
+    if (isFetching.current) return;
+    isFetching.current = true;
+    try {
+      const { data: top20 } = await supabase
+        .from("progress")
+        .select(
+          `user_id, score, q1_time, q2_time, q3_time,q4_time, total_time, last_answered_at, users ( name )`,
+        )
+        .order("score", { ascending: false })
+        .order("last_answered_at", { ascending: true })
+        .limit(20);
 
-    if (data) {
-      console.log(data, "it is coming here");
-      const formattedTeams = data.map((d: any) => ({
-        id: d.user_id,
-        name:
-          d.user_id === user?.id
-            ? "You"
-            : d.users?.name || `Team ${d.user_id.slice(0, 4)}`,
-        score: d.score || 0,
-        q1_time: d.q1_time,
-        q2_time: d.q2_time,
-        q3_time: d.q3_time,
-        total_time: d.total_time,
-        last_answered_at: d.last_answered_at,
-      }));
+      if (top20) {
+        let finalTeams = [...top20];
+        const isUserInTop20 = top20.some(
+          (t) => t.user_id === userRef.current?.id,
+        );
 
-      setTeams(formattedTeams);
+        if (!isUserInTop20 && userRef.current?.id) {
+          const { data: userData } = await supabase
+            .from("progress")
+            .select(
+              `user_id, score, q1_time, q2_time, q3_time, q4_time,total_time, last_answered_at, users ( name )`,
+            )
+            .eq("user_id", userRef.current.id)
+            .maybeSingle();
+
+          if (userData) finalTeams.push(userData);
+        }
+
+        // Fetch actual rank from DB for current user
+        if (userRef.current?.id) {
+          const { data: rankData } = await supabase.rpc("get_user_rank", {
+            p_user_id: userRef.current.id,
+          });
+          setActualUserRank(rankData ?? null);
+        }
+        const formatted = finalTeams.map((d: any) => ({
+          id: d.user_id,
+          name:
+            d.user_id === userRef.current?.id
+              ? "You"
+              : d.users?.name || `Team ${d.user_id.slice(0, 4)}`,
+          score: d.score || 0,
+          q1_time: d.q1_time,
+          q2_time: d.q2_time,
+          q3_time: d.q3_time,
+          q4_time: d.q4_time,
+          total_time: d.total_time,
+          last_answered_at: d.last_answered_at,
+        }));
+
+        setTeams(formatted);
+      }
+    } finally {
+      isFetching.current = false;
     }
   };
   const getProgressLabel = (team: Team) => {
     if (team.total_time) {
       return `Finished • ${formatDuration(team.total_time)}`;
     }
-
+    if (team.q4_time) {
+      return `Q4 • ${formatDuration((team.q4_time ?? 0) + (team.q3_time ?? 0) + (team.q2_time ?? 0) + (team.q1_time ?? 0))}`;
+    }
     if (team.q3_time) {
-      return `Q3 • ${formatDuration(team.q3_time + team.q1_time! + team.q2_time!)}`;
+      return `Q3 • ${formatDuration((team.q3_time ?? 0) + (team.q2_time ?? 0) + (team.q1_time ?? 0))}`;
     }
-
     if (team.q2_time) {
-      return `Q2 • ${formatDuration(team.q2_time + team.q1_time!)}`;
+      return `Q2 • ${formatDuration((team.q2_time ?? 0) + (team.q1_time ?? 0))}`;
     }
-
     if (team.q1_time) {
       return `Q1 • ${formatDuration(team.q1_time)}`;
     }
-
     return "Not started";
   };
 
   useEffect(() => {
     if (!user || eventClosed) return;
-    const time = localStorage.getItem("quiz_end_time");
-    if (time) {
-      setFinishedAfterClose(true);
 
+    if (localStorage.getItem("quiz_end_time")) {
+      setFinishedAfterClose(true);
       return;
     }
-  
-    const channel = supabase
-      .channel("leaderboard-sync")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "progress",
-        },
-        (payload) => {
-          console.log("Change detected!", payload);
-          fetchLeaderboard(); 
-        },
-      )
-      .subscribe((status) => {
-        console.log("Subscription status:", status);
-      });
-    // setIsInitialLoading(false);
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [user, eventClosed]); 
+
+    // Poll every 10s instead of realtime subscription
+    const interval = setInterval(fetchLeaderboard, 5000);
+    return () => clearInterval(interval);
+  }, [user, eventClosed]);
   const { top10, userRank, userTeam } = useMemo(() => {
     const sorted = [...teams].sort((a, b) => {
-     
       if (b.score !== a.score) return b.score - a.score;
-
-   
-      const timeA = a.last_answered_at
+      const timeA =
+        a.total_time ?? (a.q3_time ?? 0) + (a.q2_time ?? 0) + (a.q1_time ?? 0);
+      const timeB =
+        b.total_time ?? (b.q3_time ?? 0) + (b.q2_time ?? 0) + (b.q1_time ?? 0);
+      if (timeA !== timeB) return timeA - timeB;
+      const lastA = a.last_answered_at
         ? new Date(a.last_answered_at).getTime()
         : Infinity;
-      const timeB = b.last_answered_at
+      const lastB = b.last_answered_at
         ? new Date(b.last_answered_at).getTime()
         : Infinity;
-
-      return timeA - timeB; 
+      return lastA - lastB;
     });
 
     const rankIndex = sorted.findIndex((t) => t.id === user?.id);
+
     return {
       top10: sorted.slice(0, 10),
-      userRank: rankIndex !== -1 ? rankIndex + 1 : null,
-      userTeam: sorted[rankIndex],
+      userRank: actualUserRank,
+      userTeam: rankIndex !== -1 ? sorted[rankIndex] : undefined,
     };
-  }, [teams, user]);
- 
+  }, [teams, user, actualUserRank]);
   const sessionId = useMemo(() => Math.random().toString(36).substring(7), []);
 
   useEffect(() => {
     if (!user) return;
-
+    let kicked = false;
     const sessionChannel = supabase
       .channel(`user-session-${user.id}`)
       .on("broadcast", { event: "new-login" }, (payload) => {
+        if (kicked) return;
         if (payload.payload.sessionId !== sessionId) {
-       
+          kicked = true;
           alert(
             "You have been logged out because someone else logged in with your credentials.",
           );
@@ -302,7 +325,6 @@ export default function QuizPage() {
       })
       .subscribe((status) => {
         if (status === "SUBSCRIBED") {
-          
           sessionChannel.send({
             type: "broadcast",
             event: "new-login",
@@ -317,7 +339,7 @@ export default function QuizPage() {
   }, [user, sessionId]);
 
   const handleSubmit = async () => {
-    if (!input.trim() || !question || !user) return;
+    if (!input.trim() || !question || !user || loading || cooldown > 0) return;
     setLoading(true);
 
     try {
@@ -342,14 +364,13 @@ export default function QuizPage() {
 
         const now = Date.now();
 
-       
         const qStart = parseInt(
-          localStorage.getItem("qstart_3374rgewhgfdhgf84tyruir") || now.toString(),
+          localStorage.getItem("qstart_3374rgewhgfdhgf84tyruir") ||
+            now.toString(),
         );
 
         const timeTaken = now - qStart;
 
-      
         const { data: p } = await supabase
           .from("progress")
           .select("*")
@@ -366,19 +387,20 @@ export default function QuizPage() {
           last_answered_at: nowISO,
         };
 
-      
         if (q.order_index === 1) {
           updateData.q1_time = timeTaken;
         } else if (q.order_index === 2) {
           updateData.q2_time = timeTaken;
         } else if (q.order_index === 3) {
           updateData.q3_time = timeTaken;
+        } else if (q.order_index === 4) {
+          updateData.q4_time = timeTaken; // ADD THIS
         }
-
-    
-        if (q.order_index === 3) {
+        if (q.order_index === 4) {
+          // CHANGED 3 → 4
           const quizStart = parseInt(
-            localStorage.getItem("qst_asesr4fgd54w53r2436543435433356") || now.toString(),
+            localStorage.getItem("qst_asesr4fgd54w53r2436543435433356") ||
+              now.toString(),
           );
           updateData.total_time = now - quizStart;
         }
@@ -388,9 +410,11 @@ export default function QuizPage() {
         });
 
         // 🔁 reset timer for next question
-        localStorage.setItem("qstart_3374rgewhgfdhgf84tyruir", Date.now().toString());
+        localStorage.setItem(
+          "qstart_3374rgewhgfdhgf84tyruir",
+          Date.now().toString(),
+        );
 
-     
         const { data: nextQ } = await supabase
           .from("questions")
           .select("*")
@@ -416,41 +440,6 @@ export default function QuizPage() {
     }
   };
 
-  useEffect(() => {
-    const checkStatus = async () => {
-      const { data } = await supabase
-        .from("settings")
-        .select("*")
-        .eq("id", 1)
-        .maybeSingle();
-      if (data?.is_closed) {
-        setEventClosed(true);
-        setCloseMsg(data.message);
-      }
-    };
-    checkStatus();
-
-    const channel = supabase
-      .channel("settings_changes")
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "settings" },
-        (payload) => {
-          if (payload.new.is_closed) {
-            setEventClosed(true);
-            setCloseMsg(payload.new.message);
-            setShowContinuePopup(true);
-          } else {
-            setEventClosed(false);
-            setShowContinuePopup(false);
-          }
-        },
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
   useEffect(() => {
     const handleCopyPaste = (e: Event) => {
       e.preventDefault();
@@ -479,38 +468,55 @@ export default function QuizPage() {
   useEffect(() => {
     currentRef.current = current;
   }, [current]);
+  // 1. Just the initial fetch, no channel
+  useEffect(() => {
+    const checkStatus = async () => {
+      const { data } = await supabase
+        .from("settings")
+        .select("*")
+        .eq("id", 1)
+        .maybeSingle();
+      if (data?.is_closed) {
+        setEventClosed(true);
+        setCloseMsg(data.message);
+      }
+    };
+    checkStatus();
+  }, []);
+
+  // 2. Unified channel handling both clues + event close
   useEffect(() => {
     if (!user) return;
-
-    // Pre-load the audio so it's ready to go
     const notificationAudio = new Audio("/notification.mp3");
 
     const channel = supabase
-      .channel("clue-instant-broadcast")
+      .channel("settings-unified")
       .on(
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "settings" },
         (payload) => {
+          // Handle event closed
+          if (payload.new.is_closed) {
+            setEventClosed(true);
+            setCloseMsg(payload.new.message);
+            setShowContinuePopup(true);
+          } else {
+            setEventClosed(false);
+            setShowContinuePopup(false);
+          }
+
+          // Handle clues
           const activeQuestion = currentRef.current;
           const columnKey = `q${activeQuestion}_clue`;
           const newHints = payload.new[columnKey] || [];
 
           setSettingsData((prev: any) => {
             const existingHints = prev?.[columnKey] || [];
-
             if (newHints.length > existingHints.length) {
               const latestHint = newHints[newHints.length - 1];
               setCurrentClue(latestHint);
               setShowClueToast(true);
-
-              // Play the pre-loaded audio
-              notificationAudio.play().catch((err) => {
-                console.log(
-                  "Macha, browser blocked the sound! Need user interaction first.",
-                  err,
-                );
-              });
-
+              notificationAudio.play().catch(() => {});
               setTimeout(() => setShowClueToast(false), 30000);
             }
             return payload.new;
@@ -522,7 +528,7 @@ export default function QuizPage() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user]); // Added user and current as deps
+  }, [user]);
   if (isInitialLoading) {
     return (
       <div className="h-screen flex flex-col items-center justify-center bg-[#05070b] space-y-4">
@@ -588,7 +594,6 @@ export default function QuizPage() {
   if (!question && finishedBefore && userRank! <= 3) {
     return (
       <div className="h-screen w-full bg-[#05070b] text-white flex flex-col font-sans">
-      
         <nav className="h-16 border-b border-white/5 flex items-center justify-between px-6 shrink-0 z-[60] bg-[#05070b]/80 backdrop-blur-md">
           <div
             className={`text-xl font-black tracking-tighter ${orbitron.className}`}
@@ -603,7 +608,6 @@ export default function QuizPage() {
             animate={{ opacity: 1, y: 0 }}
             className="w-full max-w-5xl mx-auto flex flex-col md:flex-row gap-8 items-start justify-center"
           >
-        
             <div className="w-full md:w-1/2 space-y-8 text-center md:text-left md:sticky md:top-10">
               <Trophy className="w-16 h-16 md:w-20 md:h-20 text-yellow-500 mx-auto md:mx-0 drop-shadow-[0_0_30px_rgba(234,179,8,0.4)] animate-bounce" />
               <div className="space-y-2">
@@ -652,7 +656,6 @@ export default function QuizPage() {
               </Button>
             </div>
 
-           
             <div className="w-full md:w-1/2 bg-white/5 border border-white/10 rounded-3xl overflow-hidden flex flex-col shadow-2xl mb-10">
               <div className="p-6 border-b border-white/10 bg-white/5">
                 <h2
@@ -809,7 +812,6 @@ export default function QuizPage() {
                     key={i}
                     className="p-4 bg-white/5 border-l-4 border-yellow-500 rounded-r-xl"
                   >
-                    
                     <p className="text-xs text-gray-500 mb-1">
                       Hint {allHints.length - i}
                     </p>
@@ -840,7 +842,7 @@ export default function QuizPage() {
               </div>
               <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
                 <motion.div
-                  animate={{ width: `${(current / 4) * 100}%` }}
+                  animate={{ width: `${(current / totalQuestions) * 100}%` }}
                   className={`h-full shadow-[0_0_15px] ${eventClosed ? "bg-gray-500 shadow-gray-500/50" : "bg-sky-500 shadow-sky-500"}`}
                 />
               </div>
