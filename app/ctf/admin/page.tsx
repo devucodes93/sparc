@@ -113,17 +113,17 @@ export default function AdminPanel() {
       .eq("id", 1);
     setIsClosed(newStatus);
   };
-
-  const formatTime = (t: string) =>
-    t
-      ? new Date(t).toLocaleTimeString("en-IN", {
-          timeZone: "Asia/Kolkata",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: true,
-        })
-      : "--";
+  const formatTime = (t: string) => {
+    if (!t) return "--";
+    // Treat the stored time as IST directly, no conversion
+    const date = new Date(t + "+00:00");
+    return date.toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    });
+  };
 
   const formatDuration = (ms?: number) => {
     if (!ms) return "--";
@@ -149,7 +149,9 @@ export default function AdminPanel() {
       <div className="h-screen bg-[#05070b] flex items-center justify-center p-6 text-white">
         <div className="w-full max-w-sm space-y-6 border border-white/10 p-8 rounded-3xl bg-white/5 backdrop-blur-md">
           <ShieldAlert className="mx-auto text-sky-500 w-12 h-12" />
-          <h1 className={`text-center text-xl font-black ${orbitron.className}`}>
+          <h1
+            className={`text-center text-xl font-black ${orbitron.className}`}
+          >
             ADMIN PANEL
           </h1>
           <Input
@@ -162,7 +164,9 @@ export default function AdminPanel() {
             placeholder="Password"
             className="bg-black/50 border-white/10 cursor-text"
             onChange={(e) => setCreds({ ...creds, pass: e.target.value })}
-            onKeyDown={(e) => { if (e.key === "Enter") handleLogin(); }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleLogin();
+            }}
           />
           <Button
             onClick={handleLogin}
@@ -193,23 +197,44 @@ export default function AdminPanel() {
       <main className="p-6 md:p-12 max-w-7xl mx-auto space-y-8">
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatCard icon={<Users size={20} />} label="Total Players" value={participants.length} color="text-sky-400" />
-          <StatCard icon={<Trophy size={20} />} label="Top Score" value={Math.max(...participants.map((p) => p.score), 0)} color="text-yellow-500" />
-          <StatCard icon={<Activity size={20} />} label="Status" value={isClosed ? "CLOSED" : "ACTIVE"} color={isClosed ? "text-red-500" : "text-green-500"} />
+          <StatCard
+            icon={<Users size={20} />}
+            label="Total Players"
+            value={participants.length}
+            color="text-sky-400"
+          />
+          <StatCard
+            icon={<Trophy size={20} />}
+            label="Top Score"
+            value={Math.max(...participants.map((p) => p.score), 0)}
+            color="text-yellow-500"
+          />
+          <StatCard
+            icon={<Activity size={20} />}
+            label="Status"
+            value={isClosed ? "CLOSED" : "ACTIVE"}
+            color={isClosed ? "text-red-500" : "text-green-500"}
+          />
         </div>
 
         {/* Event Control */}
         <div className="bg-white/5 border border-white/10 rounded-3xl p-8 space-y-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <h3 className={`text-lg font-bold ${orbitron.className}`}>EVENT CONTROL</h3>
+            <h3 className={`text-lg font-bold ${orbitron.className}`}>
+              EVENT CONTROL
+            </h3>
             <Button
               onClick={toggleEvent}
               className={`px-10 py-6 rounded-2xl font-black transition-all cursor-pointer ${isClosed ? "bg-green-600 hover:bg-green-500" : "bg-red-600 hover:bg-red-500"}`}
             >
               {isClosed ? (
-                <><Unlock className="mr-2" size={18} /> OPEN EVENT</>
+                <>
+                  <Unlock className="mr-2" size={18} /> OPEN EVENT
+                </>
               ) : (
-                <><Lock className="mr-2" size={18} /> KILL EVENT</>
+                <>
+                  <Lock className="mr-2" size={18} /> KILL EVENT
+                </>
               )}
             </Button>
           </div>
@@ -235,13 +260,20 @@ export default function AdminPanel() {
                 <div className="flex gap-2">
                   <Input
                     value={clues[`q${num}` as keyof typeof clues]}
-                    onChange={(e) => setClues({ ...clues, [`q${num}`]: e.target.value })}
-                    onKeyDown={(e) => { if (e.key === "Enter") updateClue(num, clues[`q${num}` as keyof typeof clues]); }}
+                    onChange={(e) =>
+                      setClues({ ...clues, [`q${num}`]: e.target.value })
+                    }
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter")
+                        updateClue(num, clues[`q${num}` as keyof typeof clues]);
+                    }}
                     placeholder="Add new hint..."
                     className="bg-black/40 border-white/10 cursor-text"
                   />
                   <Button
-                    onClick={() => updateClue(num, clues[`q${num}` as keyof typeof clues])}
+                    onClick={() =>
+                      updateClue(num, clues[`q${num}` as keyof typeof clues])
+                    }
                     className="bg-sky-600 hover:bg-sky-500 text-black font-bold cursor-pointer"
                   >
                     SEND
@@ -255,9 +287,14 @@ export default function AdminPanel() {
         {/* Leaderboard */}
         <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
           <div className="p-6 border-b border-white/10 flex justify-between items-center">
-            <h3 className={`text-lg font-bold ${orbitron.className}`}>LIVE LEADERBOARD</h3>
+            <h3 className={`text-lg font-bold ${orbitron.className}`}>
+              LIVE LEADERBOARD
+            </h3>
             <div className="relative w-80">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" size={18} />
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600"
+                size={18}
+              />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -279,7 +316,10 @@ export default function AdminPanel() {
               </thead>
               <tbody className="divide-y divide-white/5">
                 {rankedData.map((p, idx) => (
-                  <tr key={p.user_id} className="hover:bg-white/[0.02] transition-colors cursor-default">
+                  <tr
+                    key={p.user_id}
+                    className="hover:bg-white/[0.02] transition-colors cursor-default"
+                  >
                     <td className="p-5 font-black text-sky-500">#{idx + 1}</td>
                     <td className="p-5 font-bold">{p.users?.name || "User"}</td>
                     <td className="p-5">
@@ -287,8 +327,12 @@ export default function AdminPanel() {
                         {p.score} pts
                       </span>
                     </td>
-                    <td className="p-5 text-xs text-gray-400 font-mono">{getProgressLabel(p)}</td>
-                    <td className="p-5 font-mono text-xs text-gray-500">{formatTime(p.last_answered_at)}</td>
+                    <td className="p-5 text-xs text-gray-400 font-mono">
+                      {getProgressLabel(p)}
+                    </td>
+                    <td className="p-5 font-mono text-xs text-gray-500">
+                      {formatTime(p.last_answered_at)}
+                    </td>
                   </tr>
                 ))}
               </tbody>
