@@ -58,7 +58,7 @@ const rules = [
 ];
 
 export default function Page() {
-  const targetDate = new Date("2026-03-21T09:00:00");
+  const targetDate = new Date("2026-03-20T09:00:00");
   const [timeLeft, setTimeLeft] = useState<any>(null);
   const [started, setStarted] = useState(false);
   const [user, setUser] = useState<any>(null);
