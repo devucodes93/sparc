@@ -40,13 +40,15 @@ const rules = [
     section: "🏆 Winner Determination",
     items: [
       "If no team solves all puzzles by 11:59 PM on 22nd March, the top 3 teams on the leaderboard will be declared winners.",
-      "Rankings are determined based on number of puzzles solved and time taken to solve those puzzles.",
+      "Rankings are determined based on number of puzzles solved and time of completion (submission timestamps of correct solutions).",
+      "Ranking is based on when a team completes the challenges, not how fast they solve after starting.",
+      "A team that finishes earlier in real time will rank higher, even if another team solves the same challenges in less duration but at a later time.",
     ],
   },
   {
     section: "⚖️ Tie-Breaking Rule",
     items: [
-      "If two or more teams solve the same number of challenges, the team that achieved it in the least amount of time will rank higher.",
+      "If two or more teams solve the same number of challenges, the team that reaches that solve count earlier (based on submission timestamps) will rank higher.",
     ],
   },
   {

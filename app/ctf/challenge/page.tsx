@@ -209,7 +209,7 @@ export default function QuizPage() {
           `user_id, score, q1_time, q2_time, q3_time, q4_time, total_time, last_answered_at, users ( name )`,
         )
         .order("score", { ascending: false })
-        .order("total_time", { ascending: true, nullsFirst: false })
+        .order("last_answered_at", { ascending: true })
         .limit(20);
       if (top20) {
         let finalTeams = [...top20];
@@ -258,21 +258,20 @@ export default function QuizPage() {
     }
   };
   const getProgressLabel = (team: Team) => {
-    if (team.total_time) {
-      return `Finished • ${formatDuration(team.total_time)}`;
-    }
-    if (team.q4_time) {
-      return `Q4 • ${formatDuration((team.q4_time ?? 0) + (team.q3_time ?? 0) + (team.q2_time ?? 0) + (team.q1_time ?? 0))}`;
-    }
-    if (team.q3_time) {
-      return `Q3 • ${formatDuration((team.q3_time ?? 0) + (team.q2_time ?? 0) + (team.q1_time ?? 0))}`;
-    }
-    if (team.q2_time) {
-      return `Q2 • ${formatDuration((team.q2_time ?? 0) + (team.q1_time ?? 0))}`;
-    }
-    if (team.q1_time) {
-      return `Q1 • ${formatDuration(team.q1_time)}`;
-    }
+    if (!team.last_answered_at) return "Not started";
+
+    const time = new Date(team.last_answered_at+"+00:00").toLocaleTimeString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+    if (team.total_time) return `Finished • ${time}`;
+    if (team.q4_time) return `Q4 • ${time}`;
+    if (team.q3_time) return `Q3 • ${time}`;
+    if (team.q2_time) return `Q2 • ${time}`;
+    if (team.q1_time) return `Q1 • ${time}`;
     return "Not started";
   };
 
@@ -292,20 +291,7 @@ export default function QuizPage() {
     const sorted = [...teams].sort((a, b) => {
       if (b.score !== a.score) return b.score - a.score;
 
-      // Calculate cumulative time for all answered questions
-      const timeA =
-        (a.q1_time ?? 0) +
-        (a.q2_time ?? 0) +
-        (a.q3_time ?? 0) +
-        (a.q4_time ?? 0);
-      const timeB =
-        (b.q1_time ?? 0) +
-        (b.q2_time ?? 0) +
-        (b.q3_time ?? 0) +
-        (b.q4_time ?? 0);
-
-      if (timeA !== timeB) return timeA - timeB; // less time = higher rank
-
+      // Same score → whoever answered last question first wins
       const lastA = a.last_answered_at
         ? new Date(a.last_answered_at).getTime()
         : Infinity;
