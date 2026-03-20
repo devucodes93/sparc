@@ -576,7 +576,7 @@ export default function QuizPage() {
   //   );
   // }
 
-  if ((!question && finishedBefore) || userRank! <= 3) {
+  if ((!question && finishedBefore) || userRank! <= 3 && !question) {
     return (
       <div className="h-screen w-full bg-[#05070b] text-white flex flex-col font-sans">
         <nav className="h-16 border-b border-white/5 flex items-center justify-between px-6 shrink-0 z-[60] bg-[#05070b]/80 backdrop-blur-md">
