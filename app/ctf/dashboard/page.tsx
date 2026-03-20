@@ -12,8 +12,53 @@ const supabase = createClient(
   "https://wgtouvbajowqrdrmvcut.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndndG91dmJham93cXJkcm12Y3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4OTg0MTUsImV4cCI6MjA4OTQ3NDQxNX0.lLPTRfi_sKe5uxPWBp_agIPCYroaAduV8LH67jPMrhY",
 );
+
+const rules = [
+  {
+    section: "🕒 Event Duration",
+    items: [
+      "The competition will be accessible from 9:00 AM on 21st March to 11:59 PM on 22nd March.",
+      "Participants may attempt challenges at any time within this window.",
+    ],
+  },
+  {
+    section: "🧩 Challenge Completion & Early Termination",
+    items: [
+      "The CTF consists of 4 puzzles.",
+      "If the top 3 teams successfully solve all 4 puzzles, the competition will officially conclude early.",
+      "Even after early termination, other participants may continue solving challenges.",
+    ],
+  },
+  {
+    section: "🏆 Winner Determination",
+    items: [
+      "If no team solves all puzzles by 11:59 PM on 22nd March, the top 3 teams on the leaderboard will be declared winners.",
+      "Rankings are determined based on number of puzzles solved and time taken to solve those puzzles.",
+    ],
+  },
+  {
+    section: "⚖️ Tie-Breaking Rule",
+    items: [
+      "If two or more teams solve the same number of challenges, the team that achieved it in the least amount of time will rank higher.",
+    ],
+  },
+  {
+    section: "📊 Leaderboard",
+    items: [
+      "Participants will have access to a live leaderboard displaying the top 10 teams.",
+    ],
+  },
+  {
+    section: "💡 Hints",
+    items: [
+      "Hints will be released at regular intervals.",
+      "Participants can access them via the Hint Logs section.",
+    ],
+  },
+];
+
 export default function Page() {
-  const targetDate = new Date("2026-03-20T09:00:00");
+  const targetDate = new Date("2026-03-21T09:00:00");
   const [timeLeft, setTimeLeft] = useState<any>(null);
   const [started, setStarted] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -24,6 +69,7 @@ export default function Page() {
     const timer = setTimeout(() => setShowNotice(true), 1500);
     return () => clearTimeout(timer);
   }, []);
+
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
@@ -33,21 +79,21 @@ export default function Page() {
       router.push("/ctf/login");
     }
   };
+
   useEffect(() => {
     const checkSession = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-
       if (session) {
         router.push("/ctf/dashboard");
       } else {
         router.push("/ctf/login");
       }
     };
-
     checkSession();
   }, [router]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
@@ -72,6 +118,7 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-[#05070b] text-white flex items-center justify-center px-6 relative overflow-hidden">
+      {/* Nav */}
       <nav className="fixed top-0 w-full z-50 backdrop-blur-xl px-6 py-2 border-b border-white/5">
         <div className="max-w-7xl mx-auto flex justify-between items-center h-16">
           <div
@@ -89,34 +136,36 @@ export default function Page() {
               SP<span className="text-sky-500">AR</span>C
             </span>
           </div>
-
           <div className="flex items-center gap-4">
             <span className="hidden md:block text-xs text-gray-400 uppercase tracking-widest">
               Virtual CTF
             </span>
             <Button
               onClick={handleLogout}
-              className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 text-xs px-4 h-8 rounded-lg transition-all  cursor-pointer"
+              className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 text-xs px-4 h-8 rounded-lg transition-all cursor-pointer"
             >
               Logout
             </Button>
           </div>
         </div>
-      </nav>{" "}
+      </nav>
+
+      {/* Rules Popup */}
       {showNotice && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
-          <div className="w-full max-w-xl bg-[#0a1018] border border-sky-500/20 p-10 rounded-2xl shadow-2xl relative overflow-hidden">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="w-full max-w-2xl bg-[#0a1018] border border-sky-500/20 rounded-2xl shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+            {/* Top accent line */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-sky-500 to-transparent opacity-50" />
 
-            <button
-              onClick={() => setShowNotice(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
-            >
-              <X size={24} />
-            </button>
-
-            <div className="text-center space-y-6">
-              <div className="space-y-2">
+            {/* Header — fixed inside modal */}
+            <div className="px-8 pt-8 pb-4 shrink-0">
+              <button
+                onClick={() => setShowNotice(false)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors cursor-pointer"
+              >
+                <X size={24} />
+              </button>
+              <div className="text-center space-y-2">
                 <h3
                   className={`text-3xl font-black tracking-tighter ${orbitron.className}`}
                 >
@@ -126,38 +175,51 @@ export default function Page() {
                   Secure Environment // Unauthorized Access Prohibited
                 </p>
               </div>
+              <p className="text-[10px] font-black text-sky-500 uppercase tracking-[0.3em] mt-6">
+                📜 Rules & Guidelines
+              </p>
+            </div>
 
-              <div className="space-y-4 text-left pt-4">
-                <p className="text-[10px] font-black text-sky-500 uppercase tracking-[0.3em] mb-2">
-                  Participant Rules
-                </p>
-                {[
-                  "The competition will be accessible from 9:00 AM on 21st March to 11:59 PM on 22nd March. Participants may attempt challenges at any time within this window.",
-                  "The CTF consists of 4 puzzles. If the top 3 teams successfully solve all 4 puzzles, the competition will officially conclude early. Even after early termination, other participants may continue solving challenges.",
-                  "If no team solves all puzzles by 11:59 PM on 22nd March, the top 3 teams on the leaderboard will be declared winners. Rankings are determined based on number of puzzles solved and time taken.",
-                  "If two or more teams solve the same number of challenges, the team that achieved it in the least amount of time will rank higher.",
-                  "Participants will have access to a live leaderboard displaying the top 10 teams.",
-                  "Hints will be released at regular intervals. Participants can access them via the Hint Logs section (💡 icon).",
-                ].map((text, i) => (
-                  <div
-                    key={i}
-                    className="flex items-start gap-4 bg-white/5 p-5 rounded-xl border border-white/10 hover:border-sky-500/30 transition-all"
-                  >
-                    <span className="text-sky-500 font-mono text-xs mt-0.5">
-                      0{i + 1}
-                    </span>
-                    <p className="text-[12px] text-gray-300 font-medium leading-relaxed tracking-wide">
-                      {text}
-                    </p>
-                  </div>
-                ))}
-              </div>
+            {/* Scrollable rules body */}
+            <div className="overflow-y-auto px-8 pb-8 space-y-5 flex-1 custom-scrollbar">
+              {rules.map((rule, i) => (
+                <div key={i} className="space-y-2">
+                  <p className="text-xs font-black text-white tracking-wide">
+                    {rule.section}
+                  </p>
+                  {rule.items.map((text, j) => (
+                    <div
+                      key={j}
+                      className="flex items-start gap-4 bg-white/5 p-4 rounded-xl border border-white/10 hover:border-sky-500/30 transition-all"
+                    >
+                      <span className="text-sky-500 font-mono text-xs mt-0.5 shrink-0">
+                        {String(j + 1).padStart(2, "0")}
+                      </span>
+                      <p className="text-[12px] text-gray-300 font-medium leading-relaxed tracking-wide">
+                        {text}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ))}
+
+              {/* Acknowledge button */}
+              <Button
+                onClick={() => setShowNotice(false)}
+                className="w-full bg-sky-600 hover:bg-sky-500 text-black font-black uppercase tracking-widest py-6 rounded-xl mt-2 cursor-pointer"
+              >
+                I Understand — Let's Go
+              </Button>
             </div>
           </div>
         </div>
       )}
+
+      {/* Background blobs */}
       <div className="absolute w-[500px] h-[500px] bg-sky-500/10 blur-[120px] rounded-full top-[-100px] left-[-100px]" />
       <div className="absolute w-[400px] h-[400px] bg-purple-500/10 blur-[120px] rounded-full bottom-[-100px] right-[-100px]" />
+
+      {/* Main content */}
       <div className="w-full max-w-2xl text-center space-y-10 z-10">
         <div className="space-y-4">
           <h1
@@ -176,7 +238,6 @@ export default function Page() {
             <p className="text-gray-400 uppercase tracking-widest text-xs">
               Challenge starts in
             </p>
-
             <div className="flex items-center justify-center gap-4 sm:gap-6">
               {["days", "hours", "minutes", "seconds"].map((unit, i) => (
                 <div key={unit} className="flex items-center gap-2">
@@ -190,7 +251,6 @@ export default function Page() {
                       {unit}
                     </span>
                   </div>
-
                   {i !== 3 && (
                     <span className="text-sky-500 text-2xl font-bold">:</span>
                   )}
@@ -200,7 +260,6 @@ export default function Page() {
           </>
         ) : (
           <>
-            {/* LIVE */}
             <div className="space-y-4">
               <p className="text-green-400 text-lg font-semibold animate-pulse">
                 ● Challenge is Live
@@ -209,9 +268,8 @@ export default function Page() {
                 The CTF is now active. Start solving and climb the leaderboard.
               </p>
             </div>
-
             <Button
-              className="bg-sky-500 hover:bg-sky-600 text-black font-bold px-10 py-5 rounded-xl transition-all hover:scale-105"
+              className="bg-sky-500 hover:bg-sky-600 text-black font-bold px-10 py-5 rounded-xl transition-all hover:scale-105 cursor-pointer"
               onClick={() => router.push("/ctf/challenge")}
             >
               Enter Challenge
@@ -219,6 +277,16 @@ export default function Page() {
           </>
         )}
       </div>
+
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(56, 189, 248, 0.4);
+          border-radius: 10px;
+        }
+      `}</style>
     </div>
   );
 }
