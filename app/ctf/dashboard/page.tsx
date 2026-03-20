@@ -157,7 +157,7 @@ function FinalCountdown({ seconds }: { seconds: number }) {
 }
 
 export default function Page() {
-  const targetDate = new Date("2026-03-20T23:20:00");
+  const targetDate = new Date("2026-03-21T09:20:00");
   const [timeLeft, setTimeLeft] = useState<any>(null);
   const [started, setStarted] = useState(false);
   const [totalSecondsLeft, setTotalSecondsLeft] = useState<number>(Infinity);

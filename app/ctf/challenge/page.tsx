@@ -841,8 +841,8 @@ export default function QuizPage() {
                   EVENT ENDED
                 </h2>
 
-                <div className="space-y-3 text-left">
-                  <p className="text-red-400 font-black text-sm text-center">
+                <div className="space-y-3 text-center">
+                  <p className="text-red-400 font-black text-sm">
                     🚨 Competition Update 🚨
                   </p>
                   <p className="text-gray-300 text-sm leading-relaxed">
@@ -853,7 +853,7 @@ export default function QuizPage() {
                     With this, the winners of the Virtual Signal Processing CTF
                     have been determined.
                   </p>
-                  <p className="text-sky-400 font-bold text-sm text-center">
+                  <p className="text-sky-400 font-bold text-sm">
                     🎉 Congratulations to our winning teams!
                   </p>
                   <p className="text-gray-400 text-sm leading-relaxed italic">
