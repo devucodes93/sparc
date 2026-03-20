@@ -190,6 +190,15 @@ export default function QuizPage() {
   useEffect(() => {
     userRef.current = user;
   }, [user]);
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("Logout error:", error.message);
+    } else {
+      localStorage.clear();
+      router.push("/ctf/login");
+    }
+  };
   const fetchLeaderboard = async () => {
     if (isFetching.current) return;
     isFetching.current = true;
@@ -479,6 +488,7 @@ export default function QuizPage() {
       if (data?.is_closed) {
         setEventClosed(true);
         setCloseMsg(data.message);
+        setShowContinuePopup(true); // ADD THIS
       }
     };
     checkStatus();
@@ -770,7 +780,18 @@ export default function QuizPage() {
         >
           SP<span className="text-sky-500">AR</span>C
         </div>
-        <div className="flex gap-3">
+      
+            <div className="flex items-center gap-4">
+            <span className="hidden md:block text-xs text-gray-400 uppercase tracking-widest">
+              Virtual CTF
+            </span>
+            <Button
+              onClick={handleLogout}
+              className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 text-xs px-4 h-8 rounded-lg transition-all cursor-pointer"
+            >
+              Logout
+            </Button>
+         
           <button
             onClick={() => setIsHintsOpen(true)}
             className="p-2 bg-yellow-500/10 rounded-lg border border-yellow-500/20 text-yellow-400 cursor-pointer"
@@ -829,6 +850,63 @@ export default function QuizPage() {
       </AnimatePresence>
 
       <div className="flex flex-1 relative overflow-hidden">
+        {" "}
+        <AnimatePresence>
+          {showContinuePopup && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/90 backdrop-blur-xl p-6"
+            >
+              <div className="bg-[#0a1018] border-2 border-sky-500 rounded-3xl p-10 max-w-sm w-full text-center space-y-6 shadow-[0_0_50px_rgba(14,165,233,0.3)]">
+                <Lock className="mx-auto text-sky-500 w-16 h-16 animate-pulse" />
+                <h2 className={`text-2xl font-black ${orbitron.className}`}>
+                  EVENT ENDED
+                </h2>
+
+                <div className="space-y-3 text-left">
+                  <p className="text-red-400 font-black text-sm text-center">
+                    🚨 Competition Update 🚨
+                  </p>
+                  <p className="text-gray-300 text-xs leading-relaxed">
+                    The top 3 teams have successfully solved all the challenges!
+                    🏆
+                  </p>
+                  <p className="text-gray-300 text-xs leading-relaxed">
+                    With this, the winners of the Virtual Signal Processing CTF
+                    have been determined.
+                  </p>
+                  <p className="text-sky-400 font-bold text-xs text-center">
+                    🎉 Congratulations to our winning teams!
+                  </p>
+                  <p className="text-gray-400 text-xs leading-relaxed italic">
+                    The competition is now officially concluded from a ranking
+                    standpoint. However, all participants are welcome to
+                    continue solving the remaining challenges for learning and
+                    exploration.
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  <Button
+                    onClick={() => setShowContinuePopup(false)}
+                    className="w-full bg-sky-500 hover:bg-sky-400 text-black font-bold cursor-pointer"
+                  >
+                    WISH TO CONTINUE
+                  </Button>
+                  <Button
+                    onClick={() => router.push("/")}
+                    variant="outline"
+                    className="w-full border-white/10 text-white hover:bg-white/5 cursor-pointer"
+                  >
+                    EXIT TO HOME
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
         <main className="flex-1 flex flex-col items-center overflow-y-auto p-6 relative">
           <div className="w-full max-w-lg space-y-8 my-auto py-8">
             <div className="space-y-2">
@@ -912,7 +990,6 @@ export default function QuizPage() {
             </div>
           </div>
         </main>
-
         <AnimatePresence>
           {isSidebarOpen && (
             <motion.aside

@@ -22,6 +22,13 @@ const rules = [
     ],
   },
   {
+    section: "👥 Team Access Rule",
+    items: [
+      "Only one member per team is allowed to log in to the platform at any given time.",
+      "Teams are responsible for coordinating internally; multiple simultaneous logins may lead to disqualification.",
+    ],
+  },
+  {
     section: "🧩 Challenge Completion & Early Termination",
     items: [
       "The CTF consists of 4 puzzles.",
@@ -56,7 +63,6 @@ const rules = [
     ],
   },
 ];
-
 export default function Page() {
   const targetDate = new Date("2026-03-20T09:00:00");
   const [timeLeft, setTimeLeft] = useState<any>(null);
