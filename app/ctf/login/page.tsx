@@ -54,7 +54,7 @@ export default function Page() {
     }
 
     if (data?.user) {
-      // 🔥 Update the name in the public.users table
+    
       const { error: nameError } = await supabase
         .from("users")
         .update({ name: name.trim() })
@@ -62,7 +62,7 @@ export default function Page() {
 
       if (nameError) console.error("Name update failed:", nameError.message);
 
-      // Ensure progress row exists
+    
       await supabase
         .from("progress")
         .upsert(
@@ -82,7 +82,7 @@ export default function Page() {
         className={`fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-xl px-6 py-2 border-b border-white/5`}
       >
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-17">
-          {/* LOGO SECTION */}
+        
           <div
             className="flex items-center gap-3 cursor-pointer"
             onClick={() => {
@@ -103,7 +103,7 @@ export default function Page() {
             </span>
           </div>
 
-          {/* RIGHT SIDE TEXT */}
+        
           <span className="text-xs md:text-sm text-gray-400 font-medium uppercase tracking-[0.2em] ml-2">
             Virtual CTF
           </span>
@@ -111,7 +111,7 @@ export default function Page() {
       </nav>
       {/* CARD */}
       <div className="w-full max-w-md bg-[#0a1018] border border-sky-900/40 rounded-2xl p-8 md:p-10 space-y-8 shadow-[0_0_60px_rgba(14,165,233,0.08)]">
-        {/* HEADER */}
+   
         <div className="text-center space-y-3">
           <h1
             className={`text-2xl md:text-3xl font-black ${orbitron.className}`}
@@ -150,7 +150,7 @@ export default function Page() {
             />
           </div>
 
-          {/* PASSWORD */}
+          
           <div className="space-y-2">
             <label className="text-sm text-gray-400">Password</label>
             <input

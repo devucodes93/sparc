@@ -5,6 +5,7 @@ import { Orbitron } from "next/font/google";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
+import { X } from "lucide-react";
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["700", "800"] });
 const supabase = createClient(
@@ -20,7 +21,7 @@ export default function Page() {
   const [showNotice, setShowNotice] = useState(false);
 
   useEffect(() => {
-    // Show popup after a small delay for maximum effect
+   
     const timer = setTimeout(() => setShowNotice(true), 1500);
     return () => clearTimeout(timer);
   }, []);
@@ -29,7 +30,7 @@ export default function Page() {
     if (error) {
       console.error("Logout error:", error.message);
     } else {
-      // Clear local storage and redirect
+ 
       localStorage.clear();
       router.push("/ctf/login");
     }
@@ -41,10 +42,10 @@ export default function Page() {
       } = await supabase.auth.getSession();
 
       if (session) {
-        // If logged in, skip this and go to dashboard
+     
         router.push("/ctf/dashboard");
       } else {
-        // 🔥 If NO session, kick them back to login immediately
+      
         router.push("/ctf/login");
       }
     };
@@ -75,7 +76,7 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-[#05070b] text-white flex items-center justify-center px-6 relative overflow-hidden">
-      {/* NAVBAR */}
+  
       <nav className="fixed top-0 w-full z-50 backdrop-blur-xl px-6 py-2 border-b border-white/5">
         <div className="max-w-7xl mx-auto flex justify-between items-center h-16">
           <div
@@ -110,10 +111,10 @@ export default function Page() {
       {showNotice && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
           <div className="w-full max-w-xl bg-[#0a1018] border border-sky-500/20 p-10 rounded-2xl shadow-2xl relative overflow-hidden">
-            {/* Top Accent Line */}
+          
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-sky-500 to-transparent opacity-50" />
 
-            {/* Close Button */}
+       
             <button
               onClick={() => setShowNotice(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
@@ -122,7 +123,7 @@ export default function Page() {
             </button>
 
             <div className="text-center space-y-6">
-              {/* Header */}
+            
               <div className="space-y-2">
                 <h3
                   className={`text-3xl font-black tracking-tighter ${orbitron.className}`}
@@ -134,7 +135,7 @@ export default function Page() {
                 </p>
               </div>
 
-              {/* Rules Section */}
+              
               <div className="space-y-4 text-left pt-4">
                 <p className="text-[10px] font-black text-sky-500 uppercase tracking-[0.3em] mb-2">
                   Participant Rules
@@ -154,17 +155,17 @@ export default function Page() {
                 ))}
               </div>
 
-              {/* Login Button */}
+            
             </div>
           </div>
         </div>
       )}
-      {/* BACKGROUND */}
+     
       <div className="absolute w-[500px] h-[500px] bg-sky-500/10 blur-[120px] rounded-full top-[-100px] left-[-100px]" />
       <div className="absolute w-[400px] h-[400px] bg-purple-500/10 blur-[120px] rounded-full bottom-[-100px] right-[-100px]" />
-      {/* MAIN */}
+     
       <div className="w-full max-w-2xl text-center space-y-10 z-10">
-        {/* TITLE */}
+       
         <div className="space-y-4">
           <h1
             className={`text-4xl md:text-6xl font-black ${orbitron.className}`}
@@ -177,7 +178,7 @@ export default function Page() {
           </p>
         </div>
 
-        {/* COUNTDOWN */}
+        
         {!started ? (
           <>
             <p className="text-gray-400 uppercase tracking-widest text-xs">

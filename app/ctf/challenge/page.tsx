@@ -105,8 +105,7 @@ export default function QuizPage() {
         .maybeSingle();
       const userIdx = progress?.current_question || 1;
 
-      // KADAKH FIX: If they are on Question 1 and no start time exists, set it.
-      // Or, if you want to be super strict, reset it when current_question is 1.
+   
       if (userIdx === 1) {
         localStorage.setItem("qst_asesr4fgd54w53r2436543435433356", Date.now().toString());
         localStorage.setItem("qstart_3374rgewhgfdhgf84tyruir", Date.now().toString());
@@ -149,7 +148,7 @@ export default function QuizPage() {
 
     const nextIndex = progress?.current_question || 1;
 
-    // If they already finished all questions, don't even fetch
+   
     if (totalQuestions > 0 && nextIndex > totalQuestions) {
       setQuestion(null);
       setFinishedBefore(true);
@@ -168,7 +167,7 @@ export default function QuizPage() {
       setCurrent(qData.order_index);
     } else {
       setQuestion(null);
-      // If we fetched and found nothing, they likely finished
+   
       if (nextIndex > 1) setFinishedBefore(true);
     }
   };
@@ -228,7 +227,7 @@ export default function QuizPage() {
 
     return "Not started";
   };
-  // --- Fixed Real-time Leaderboard ---
+
   useEffect(() => {
     if (!user || eventClosed) return;
     const time = localStorage.getItem("quiz_end_time");
@@ -237,19 +236,19 @@ export default function QuizPage() {
 
       return;
     }
-    // 1. Create the channel
+  
     const channel = supabase
       .channel("leaderboard-sync")
       .on(
         "postgres_changes",
         {
-          event: "*", // Listen to INSERT, UPDATE, and DELETE
+          event: "*",
           schema: "public",
           table: "progress",
         },
         (payload) => {
           console.log("Change detected!", payload);
-          fetchLeaderboard(); // Refresh data on any change
+          fetchLeaderboard(); 
         },
       )
       .subscribe((status) => {
@@ -259,15 +258,13 @@ export default function QuizPage() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user, eventClosed]); // Added user as dependency
+  }, [user, eventClosed]); 
   const { top10, userRank, userTeam } = useMemo(() => {
     const sorted = [...teams].sort((a, b) => {
-      // 1. Primary: Higher Score wins
+     
       if (b.score !== a.score) return b.score - a.score;
 
-      // 2. Secondary (The Tie-Breaker):
-      // If scores are equal, the one who reached this score EARLIER wins.
-      // We use the timestamp from 'last_answered_at'.
+   
       const timeA = a.last_answered_at
         ? new Date(a.last_answered_at).getTime()
         : Infinity;
@@ -275,7 +272,7 @@ export default function QuizPage() {
         ? new Date(b.last_answered_at).getTime()
         : Infinity;
 
-      return timeA - timeB; // Lower timestamp (earlier) comes first
+      return timeA - timeB; 
     });
 
     const rankIndex = sorted.findIndex((t) => t.id === user?.id);
@@ -285,7 +282,7 @@ export default function QuizPage() {
       userTeam: sorted[rankIndex],
     };
   }, [teams, user]);
-  // Inside your component
+ 
   const sessionId = useMemo(() => Math.random().toString(36).substring(7), []);
 
   useEffect(() => {
@@ -295,7 +292,7 @@ export default function QuizPage() {
       .channel(`user-session-${user.id}`)
       .on("broadcast", { event: "new-login" }, (payload) => {
         if (payload.payload.sessionId !== sessionId) {
-          // Someone else logged in! Kick this user out.
+       
           alert(
             "You have been logged out because someone else logged in with your credentials.",
           );
@@ -305,7 +302,7 @@ export default function QuizPage() {
       })
       .subscribe((status) => {
         if (status === "SUBSCRIBED") {
-          // Tell everyone else "I am here now"
+          
           sessionChannel.send({
             type: "broadcast",
             event: "new-login",
@@ -345,14 +342,14 @@ export default function QuizPage() {
 
         const now = Date.now();
 
-        // 🔥 get question start time
+       
         const qStart = parseInt(
           localStorage.getItem("qstart_3374rgewhgfdhgf84tyruir") || now.toString(),
         );
 
         const timeTaken = now - qStart;
 
-        // 🔥 fetch existing progress
+      
         const { data: p } = await supabase
           .from("progress")
           .select("*")
@@ -369,7 +366,7 @@ export default function QuizPage() {
           last_answered_at: nowISO,
         };
 
-        // 🎯 store per-question time
+      
         if (q.order_index === 1) {
           updateData.q1_time = timeTaken;
         } else if (q.order_index === 2) {
@@ -378,7 +375,7 @@ export default function QuizPage() {
           updateData.q3_time = timeTaken;
         }
 
-        // 🏁 final total time
+    
         if (q.order_index === 3) {
           const quizStart = parseInt(
             localStorage.getItem("qst_asesr4fgd54w53r2436543435433356") || now.toString(),
@@ -393,7 +390,7 @@ export default function QuizPage() {
         // 🔁 reset timer for next question
         localStorage.setItem("qstart_3374rgewhgfdhgf84tyruir", Date.now().toString());
 
-        // 🔥 move to next question
+     
         const { data: nextQ } = await supabase
           .from("questions")
           .select("*")
@@ -591,7 +588,7 @@ export default function QuizPage() {
   if (!question && finishedBefore && userRank! <= 3) {
     return (
       <div className="h-screen w-full bg-[#05070b] text-white flex flex-col font-sans">
-        {/* Navbar added for mobile/web consistency */}
+      
         <nav className="h-16 border-b border-white/5 flex items-center justify-between px-6 shrink-0 z-[60] bg-[#05070b]/80 backdrop-blur-md">
           <div
             className={`text-xl font-black tracking-tighter ${orbitron.className}`}
@@ -606,7 +603,7 @@ export default function QuizPage() {
             animate={{ opacity: 1, y: 0 }}
             className="w-full max-w-5xl mx-auto flex flex-col md:flex-row gap-8 items-start justify-center"
           >
-            {/* LEFT SIDE: VICTORY STATS */}
+        
             <div className="w-full md:w-1/2 space-y-8 text-center md:text-left md:sticky md:top-10">
               <Trophy className="w-16 h-16 md:w-20 md:h-20 text-yellow-500 mx-auto md:mx-0 drop-shadow-[0_0_30px_rgba(234,179,8,0.4)] animate-bounce" />
               <div className="space-y-2">
@@ -655,7 +652,7 @@ export default function QuizPage() {
               </Button>
             </div>
 
-            {/* RIGHT SIDE: LIVE LEADERBOARD */}
+           
             <div className="w-full md:w-1/2 bg-white/5 border border-white/10 rounded-3xl overflow-hidden flex flex-col shadow-2xl mb-10">
               <div className="p-6 border-b border-white/10 bg-white/5">
                 <h2
@@ -812,7 +809,7 @@ export default function QuizPage() {
                     key={i}
                     className="p-4 bg-white/5 border-l-4 border-yellow-500 rounded-r-xl"
                   >
-                    {/* here we have to show hint number decreasing order for the first hint : hint 1 */}
+                    
                     <p className="text-xs text-gray-500 mb-1">
                       Hint {allHints.length - i}
                     </p>

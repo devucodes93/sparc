@@ -13,7 +13,7 @@ export default function VirtualCTFPage() {
   const [showNotice, setShowNotice] = useState(false);
 
   useEffect(() => {
-    // Show popup after a small delay for maximum effect
+   
     const timer = setTimeout(() => setShowNotice(false), 1500);
     return () => clearTimeout(timer);
   }, []);
@@ -54,10 +54,10 @@ export default function VirtualCTFPage() {
       {showNotice && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
           <div className="w-full max-w-xl bg-[#0a1018] border border-sky-500/20 p-10 rounded-2xl shadow-2xl relative overflow-hidden">
-            {/* Top Accent Line */}
+          
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-sky-500 to-transparent opacity-50" />
 
-            {/* Close Button */}
+           
             <button
               onClick={() => setShowNotice(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"

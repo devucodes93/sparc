@@ -40,7 +40,7 @@ export default function AdminPanel() {
   const updateClue = async (qNum: number, newHint: string) => {
     if (!newHint.trim()) return alert("Hint cannot be empty macha!");
     
-    // 1. Fetch current array for that specific question
+   
     const colName = `q${qNum}_clue`;
     const { data: sett } = await supabase.from("settings").select(colName).eq("id", 1).single();
     
