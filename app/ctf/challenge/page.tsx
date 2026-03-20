@@ -260,12 +260,15 @@ export default function QuizPage() {
   const getProgressLabel = (team: Team) => {
     if (!team.last_answered_at) return "Not started";
 
-    const time = new Date(team.last_answered_at+"+00:00").toLocaleTimeString("en-IN", {
-      timeZone: "Asia/Kolkata",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
+    const time = new Date(team.last_answered_at + "+00:00").toLocaleTimeString(
+      "en-IN",
+      {
+        timeZone: "Asia/Kolkata",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      },
+    );
 
     if (team.total_time) return `Finished • ${time}`;
     if (team.q4_time) return `Q4 • ${time}`;
@@ -546,57 +549,34 @@ export default function QuizPage() {
       </div>
     );
   }
-  if (
-    (!question && finishedAfterClose && !finishedBefore) ||
-    (userRank! > 3 && !question)
-  ) {
-    return (
-      <div className="h-screen w-full bg-[#05070b] text-white flex items-center justify-center px-6">
-        <div className="max-w-2xl text-center space-y-10">
-          <h1
-            className={`text-4xl md:text-6xl font-black ${orbitron.className}`}
-          >
-            Virtual CTF
-          </h1>
-          <p className="text-gray-400 text-sm md:text-base max-w-xl mx-auto">
-            The event has concluded. Thank you for your participation and
-            enthusiasm!
-          </p>
-          <Button
-            onClick={() => router.push("/")}
-            className="bg-sky-500 hover:bg-sky-600 text-black font-bold px-10 py-5 rounded-xl text-base transition-all duration-300 hover:scale-105 shadow-[0_0_30px_rgba(14,165,233,0.4)] cursor-pointer"
-          >
-            BACK TO HOME
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  // if (
+  //   (!question && finishedAfterClose && !finishedBefore) ||
+  //   (userRank! > 3 && !question)
+  // ) {
+  //   return (
+  //     <div className="h-screen w-full bg-[#05070b] text-white flex items-center justify-center px-6">
+  //       <div className="max-w-2xl text-center space-y-10">
+  //         <h1
+  //           className={`text-4xl md:text-6xl font-black ${orbitron.className}`}
+  //         >
+  //           Virtual CTF
+  //         </h1>
+  //         <p className="text-gray-400 text-sm md:text-base max-w-xl mx-auto">
+  //           The event has concluded. Thank you for your participation and
+  //           enthusiasm!
+  //         </p>
+  //         <Button
+  //           onClick={() => router.push("/")}
+  //           className="bg-sky-500 hover:bg-sky-600 text-black font-bold px-10 py-5 rounded-xl text-base transition-all duration-300 hover:scale-105 shadow-[0_0_30px_rgba(14,165,233,0.4)] cursor-pointer"
+  //         >
+  //           BACK TO HOME
+  //         </Button>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
-  if (!question && eventClosed && !finishedBefore) {
-    return (
-      <div className="h-screen w-full bg-[#05070b] text-white flex items-center justify-center px-6">
-        <div className="max-w-2xl text-center space-y-10">
-          <h1
-            className={`text-4xl md:text-6xl font-black ${orbitron.className}`}
-          >
-            Virtual CTF
-          </h1>
-          <p className="text-gray-400 text-sm md:text-base max-w-xl mx-auto">
-            The event has concluded. Thank you for your participation and
-            enthusiasm!
-          </p>
-          <Button
-            onClick={() => router.push("/")}
-            className="bg-sky-500 hover:bg-sky-600 text-black font-bold px-10 py-5 rounded-xl text-base transition-all duration-300 hover:scale-105 shadow-[0_0_30px_rgba(14,165,233,0.4)] cursor-pointer"
-          >
-            BACK TO HOME
-          </Button>
-        </div>
-      </div>
-    );
-  }
-  if (!question && finishedBefore && userRank! <= 3) {
+  if ((!question && finishedBefore) || userRank! <= 3) {
     return (
       <div className="h-screen w-full bg-[#05070b] text-white flex flex-col font-sans">
         <nav className="h-16 border-b border-white/5 flex items-center justify-between px-6 shrink-0 z-[60] bg-[#05070b]/80 backdrop-blur-md">
@@ -712,29 +692,29 @@ export default function QuizPage() {
       </div>
     );
   }
-  if (eventClosed && finishedAfterClose) {
-    return (
-      <div className="h-screen w-full bg-[#05070b] text-white flex items-center justify-center px-6">
-        <div className="max-w-2xl text-center space-y-10">
-          <h1
-            className={`text-4xl md:text-6xl font-black ${orbitron.className}`}
-          >
-            Virtual CTF
-          </h1>
-          <p className="text-gray-400 text-sm md:text-base max-w-xl mx-auto">
-            The event has concluded. Thank you for your participation and
-            enthusiasm!
-          </p>
-          <Button
-            onClick={() => router.push("/")}
-            className="bg-sky-500 hover:bg-sky-600 text-black font-bold px-10 py-5 rounded-xl text-base transition-all duration-300 hover:scale-105 shadow-[0_0_30px_rgba(14,165,233,0.4)] cursor-pointer"
-          >
-            BACK TO HOME
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  // if (eventClosed && finishedAfterClose) {
+  //   return (
+  //     <div className="h-screen w-full bg-[#05070b] text-white flex items-center justify-center px-6">
+  //       <div className="max-w-2xl text-center space-y-10">
+  //         <h1
+  //           className={`text-4xl md:text-6xl font-black ${orbitron.className}`}
+  //         >
+  //           Virtual CTF
+  //         </h1>
+  //         <p className="text-gray-400 text-sm md:text-base max-w-xl mx-auto">
+  //           The event has concluded. Thank you for your participation and
+  //           enthusiasm!
+  //         </p>
+  //         <Button
+  //           onClick={() => router.push("/")}
+  //           className="bg-sky-500 hover:bg-sky-600 text-black font-bold px-10 py-5 rounded-xl text-base transition-all duration-300 hover:scale-105 shadow-[0_0_30px_rgba(14,165,233,0.4)] cursor-pointer"
+  //         >
+  //           BACK TO HOME
+  //         </Button>
+  //       </div>
+  //     </div>
+  //   );
+  // }
   return (
     <div className="min-h-screen w-full bg-[#05070b] text-white flex flex-col relative font-sans overflow-x-hidden">
       <AnimatePresence>
@@ -854,7 +834,7 @@ export default function QuizPage() {
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/90 backdrop-blur-xl p-6"
             >
-              <div className="bg-[#0a1018] border-2 border-sky-500 rounded-3xl p-10 max-w-sm w-full text-center space-y-6 shadow-[0_0_50px_rgba(14,165,233,0.3)]">
+              <div className="bg-[#0a1018] border-2 border-sky-500 rounded-3xl p-10 max-w-lg w-full text-center space-y-6 shadow-[0_0_50px_rgba(14,165,233,0.3)]">
                 <Lock className="mx-auto text-sky-500 w-16 h-16 animate-pulse" />
                 <h2 className={`text-2xl font-black ${orbitron.className}`}>
                   EVENT ENDED
@@ -864,18 +844,18 @@ export default function QuizPage() {
                   <p className="text-red-400 font-black text-sm text-center">
                     🚨 Competition Update 🚨
                   </p>
-                  <p className="text-gray-300 text-xs leading-relaxed">
+                  <p className="text-gray-300 text-sm leading-relaxed">
                     The top 3 teams have successfully solved all the challenges!
                     🏆
                   </p>
-                  <p className="text-gray-300 text-xs leading-relaxed">
+                  <p className="text-gray-300 text-sm leading-relaxed">
                     With this, the winners of the Virtual Signal Processing CTF
                     have been determined.
                   </p>
-                  <p className="text-sky-400 font-bold text-xs text-center">
+                  <p className="text-sky-400 font-bold text-sm text-center">
                     🎉 Congratulations to our winning teams!
                   </p>
-                  <p className="text-gray-400 text-xs leading-relaxed italic">
+                  <p className="text-gray-400 text-sm leading-relaxed italic">
                     The competition is now officially concluded from a ranking
                     standpoint. However, all participants are welcome to
                     continue solving the remaining challenges for learning and
