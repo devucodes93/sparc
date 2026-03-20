@@ -54,13 +54,31 @@ export default function QuizPage() {
   const [startTime, setStartTime] = useState<number | null>(null);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [currentClue, setCurrentClue] = useState("");
+  const [isHintsOpen, setIsHintsOpen] = useState(false);
+  const [settingsData, setSettingsData] = useState<any>(null);
+  // useEffect(() => {
+  //   if (currentClue && currentClue !== allHints[0]) {
+  //     setAllHints((prev) => [currentClue, ...prev]);
+  //   }
+  // }, [currentClue]);
+  const allHints = useMemo(() => {
+    if (!settingsData || !current) return [];
+    const clues = settingsData[`q${current}_clue` as keyof typeof settingsData];
+    return Array.isArray(clues) ? [...clues].reverse() : [];
+  }, [settingsData, current]);
   useEffect(() => {
     const init = async () => {
       setIsInitialLoading(true);
       const { data } = await supabase.auth.getUser();
       if (!data.user) return router.push("/");
       setUser(data.user);
-
+      const { data: settings } = await supabase
+        .from("settings")
+        .select("q1_clue, q2_clue, q3_clue")
+        .single();
+      if (settings) {
+        setSettingsData(settings);
+      }
       const { count } = await supabase
         .from("questions")
         .select("*", { count: "exact", head: true });
@@ -440,18 +458,13 @@ export default function QuizPage() {
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "settings" },
         (payload) => {
-          const newData = payload.new;
-          const oldData = payload.old;
+          setSettingsData(payload.new); // Update the whole settings object
 
-          // 🔥 THE LOGIC: Check only the clue for THIS user's current level
           const columnKey = `q${current}_clue`;
-          const newClue = newData[columnKey];
-          const oldClue = oldData[columnKey];
-
-          // Only show toast if the clue for MY question actually changed
-          // and it's not empty!
-          if (newClue && newClue !== oldClue) {
-            setCurrentClue(newClue);
+          if (
+            payload.new[columnKey]?.length >
+            (payload.old[columnKey]?.length || 0)
+          ) {
             setShowClueToast(true);
             setTimeout(() => setShowClueToast(false), 10000);
           }
@@ -707,14 +720,60 @@ export default function QuizPage() {
         >
           SP<span className="text-sky-500">AR</span>C
         </div>
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="p-2 bg-sky-500/10 rounded-lg border border-sky-500/20 text-sky-400"
-        >
-          <Trophy size={20} />
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setIsHintsOpen(true)}
+            className="p-2 bg-yellow-500/10 rounded-lg border border-yellow-500/20 text-yellow-400"
+          >
+            <Activity size={20} /> {/* You can use Lucide 'Lightbulb' here */}
+          </button>
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="p-2 bg-sky-500/10 rounded-lg border border-sky-500/20 text-sky-400"
+          >
+            <Trophy size={20} />
+          </button>
+        </div>
       </nav>
-
+      <AnimatePresence>
+        {isHintsOpen && (
+          <motion.aside
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            className="fixed right-0 top-0 h-full w-[85%] md:w-[350px] bg-black/95 backdrop-blur-3xl z-[150] p-6 border-l border-white/10"
+          >
+            <div className="flex justify-between items-center mb-8">
+              <h2
+                className={`text-lg font-black text-yellow-500 ${orbitron.className}`}
+              >
+                HINTS LOG
+              </h2>
+              <X
+                onClick={() => setIsHintsOpen(false)}
+                className="cursor-pointer text-gray-500"
+              />
+            </div>
+            <div className="space-y-4">
+              {allHints.length > 0 ? (
+                allHints.map((h, i) => (
+                  <div
+                    key={i}
+                    className="p-4 bg-white/5 border-l-4 border-yellow-500 rounded-r-xl"
+                  >
+                    <p className="text-xs text-gray-500 mb-1">Hints</p>
+                    <p className="text-sm font-bold text-white">{h}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 text-center italic">
+                  No hints yet,
+                </p>
+              )}
+            </div>
+          </motion.aside>
+        )}
+      </AnimatePresence>
       <AnimatePresence>
         {showContinuePopup && (
           <motion.div

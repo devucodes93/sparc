@@ -66,13 +66,7 @@ export default function ProfessionalEventPage() {
       points: ["Prize Pool: ₹10,000", "Date: 7th March"],
     },
   ];
-  const [showNotice, setShowNotice] = useState(false);
 
-  useEffect(() => {
-    // Show popup after a small delay for maximum effect
-    const timer = setTimeout(() => setShowNotice(true), 1500);
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <div className="min-h-screen bg-[#05070b] text-white overflow-x-hidden selection:bg-sky-500/20">
@@ -343,63 +337,7 @@ export default function ProfessionalEventPage() {
           })()}
         </div>
       </section>
-   {showNotice && (
-  <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
-    <div className="w-full max-w-xl bg-[#0a1018] border border-sky-500/20 p-10 rounded-2xl shadow-2xl relative overflow-hidden">
-      {/* Top Accent Line */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-sky-500 to-transparent opacity-50" />
-
-      {/* Close Button */}
-      <button
-        onClick={() => setShowNotice(false)}
-        className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
-      >
-        <X size={24} />
-      </button>
-
-      <div className="text-center space-y-6">
-        {/* Header */}
-        <div className="space-y-2">
-          <h3 className={`text-3xl font-black tracking-tighter ${orbitron.className}`}>
-            VIRTUAL <span className="text-sky-500">CTF</span> TERMINAL
-          </h3>
-          <p className="text-[10px] text-gray-400 uppercase tracking-[0.4em] font-bold">
-            Secure Environment // Unauthorized Access Prohibited
-          </p>
-        </div>
-
-        {/* Rules Section */}
-        <div className="space-y-4 text-left pt-4">
-          <p className="text-[10px] font-black text-sky-500 uppercase tracking-[0.3em] mb-2">
-            Participant Rules
-          </p>
-          {["Adding soon"].map((text, i) => (
-            <div
-              key={i}
-              className="flex items-start gap-4 bg-white/5 p-5 rounded-xl border border-white/10 hover:border-sky-500/30 transition-all"
-            >
-              <span className="text-sky-500 font-mono text-xs mt-0.5">0{i + 1}</span>
-              <p className="text-[12px] text-gray-300 font-medium leading-relaxed tracking-wide">
-                {text}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Login Button */}
-        <Button
-          onClick={() => {
-            setShowNotice(false);
-            router.push("/ctf/login");
-          }}
-          className="w-full bg-sky-600 hover:bg-sky-500 text-black font-black py-6 rounded-xl uppercase tracking-[0.2em] shadow-lg shadow-sky-600/20 transition-all active:scale-[0.98]"
-        >
-          Enter
-        </Button>
-      </div>
-    </div>
-  </div>
-)}
+  
       {/* FOOTER */}
       <footer className="bg-[#040608] py-20 px-8 border-t border-sky-950">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12 text-gray-500">
