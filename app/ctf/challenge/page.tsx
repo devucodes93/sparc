@@ -58,6 +58,7 @@ export default function QuizPage() {
   const [settingsData, setSettingsData] = useState<any>(null);
   const [cooldown, setCooldown] = useState(0);
   const [actualUserRank, setActualUserRank] = useState<number | null>(null);
+
   useEffect(() => {
     if (cooldown > 0) {
       const timer = setTimeout(() => setCooldown(cooldown - 1), 1000);
@@ -77,6 +78,16 @@ export default function QuizPage() {
   useEffect(() => {
     const init = async () => {
       setIsInitialLoading(true);
+
+      //if time is not reached in the morning 2026-03-21T09:00:00  navigation to home page 
+      if (new Date() < new Date("2026-03-21T09:00:00")) {
+        router.push("/");
+        return;
+      }
+
+
+     
+
       const { data } = await supabase.auth.getUser();
       if (!data.user) return router.push("/");
       window.addEventListener("beforeunload", () => {
