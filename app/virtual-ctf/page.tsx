@@ -14,7 +14,7 @@ export default function VirtualCTFPage() {
 
   useEffect(() => {
     // Show popup after a small delay for maximum effect
-    const timer = setTimeout(() => setShowNotice(true), 1500);
+    const timer = setTimeout(() => setShowNotice(false), 1500);
     return () => clearTimeout(timer);
   }, []);
   return (
