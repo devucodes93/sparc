@@ -315,36 +315,40 @@ export default function QuizPage() {
   }, [teams, user, actualUserRank]);
   const sessionId = useMemo(() => Math.random().toString(36).substring(7), []);
 
-  useEffect(() => {
-    if (!user) return;
-    let kicked = false;
-    const sessionChannel = supabase
-      .channel(`user-session-${user.id}`)
-      .on("broadcast", { event: "new-login" }, (payload) => {
-        if (kicked) return;
-        if (payload.payload.sessionId !== sessionId) {
-          kicked = true;
-          alert(
-            "You have been logged out because someone else logged in with your credentials.",
-          );
-          supabase.auth.signOut();
-          router.push("/");
-        }
-      })
-      .subscribe((status) => {
-        if (status === "SUBSCRIBED") {
+ useEffect(() => {
+  if (!user) return;
+  let kicked = false;
+
+  const sessionChannel = supabase
+    .channel(`user-session-${user.id}`)
+    .on("broadcast", { event: "new-login" }, (payload) => {
+      if (kicked) return;
+      // Only kick if the incoming sessionId is different from ours
+      if (payload.payload.sessionId !== sessionId) {
+        kicked = true;
+        supabase.auth.signOut();
+        localStorage.clear();
+        alert("You have been logged out because someone else logged in with your credentials.");
+        router.push("/ctf/login"); // CHANGED from "/" to "/ctf/login"
+      }
+    })
+    .subscribe((status) => {
+      if (status === "SUBSCRIBED") {
+        // Small delay so the channel is fully ready before broadcasting
+        setTimeout(() => {
           sessionChannel.send({
             type: "broadcast",
             event: "new-login",
             payload: { sessionId },
           });
-        }
-      });
+        }, 500); // ADD 500ms delay
+      }
+    });
 
-    return () => {
-      supabase.removeChannel(sessionChannel);
-    };
-  }, [user, sessionId]);
+  return () => {
+    supabase.removeChannel(sessionChannel);
+  };
+}, [user, sessionId]);
 
   const handleSubmit = async () => {
     if (!input.trim() || !question || !user || loading || cooldown > 0) return;
