@@ -19,6 +19,7 @@ export default function Page() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [name, setName] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   useEffect(() => {
     const checkSession = async () => {
@@ -34,47 +35,43 @@ export default function Page() {
     checkSession();
   }, [router]);
   const handleLogin = async () => {
+    if (!name.trim()) {
+      setErrorMsg("Team name is required! ");
+      return;
+    }
     setLoading(true);
     setErrorMsg("");
-    setSuccessMsg("");
 
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    setLoading(false);
-
     if (error) {
-      setErrorMsg("Invalid email or password 🚫");
+      setErrorMsg("Invalid email or password ");
+      setLoading(false);
       return;
     }
 
     if (data?.user) {
-      setSuccessMsg("Login successful ✅ Redirecting...");
+      // 🔥 Update the name in the public.users table
+      const { error: nameError } = await supabase
+        .from("users")
+        .update({ name: name.trim() })
+        .eq("id", data.user.id);
 
-      if (data?.user) {
-        setSuccessMsg("Login successful ✅ Redirecting...");
+      if (nameError) console.error("Name update failed:", nameError.message);
 
-        // You can keep this to ensure the progress row exists
-        // But the Trigger already handled the public.users entry!
-        const { error: upsertError } = await supabase.from("progress").upsert(
-          {
-            user_id: data.user.id,
-            current_question: 1,
-            score: 0,
-            completed_at: new Date().toISOString(),
-          },
+      // Ensure progress row exists
+      await supabase
+        .from("progress")
+        .upsert(
+          { user_id: data.user.id, current_question: 1, score: 0 },
           { onConflict: "user_id", ignoreDuplicates: true },
         );
 
-        if (upsertError) {
-          console.error("Progress error:", upsertError.message);
-          // Don't block the user if progress already exists
-        }
-
-        router.push("/ctf/dashboard");
-      }
+      setSuccessMsg("Login successful ✅ Redirecting...");
+      router.push("/ctf/dashboard");
     }
   };
 
@@ -137,6 +134,18 @@ export default function Page() {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-[#05070b] border border-sky-900/40 rounded-lg px-4 py-3 text-sm outline-none focus:border-sky-500 transition"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm text-gray-400">
+             Name (For Leaderboard)
+            </label>
+            <input
+              type="text"
+              placeholder="Enter your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className="w-full bg-[#05070b] border border-sky-900/40 rounded-lg px-4 py-3 text-sm outline-none focus:border-sky-500 transition"
             />
           </div>

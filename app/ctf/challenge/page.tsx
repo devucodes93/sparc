@@ -51,11 +51,17 @@ export default function QuizPage() {
   const [showContinuePopup, setShowContinuePopup] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [finishedBefore, setFinishedBefore] = useState(false);
-  const [startTime, setStartTime] = useState<number | null>(null);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [currentClue, setCurrentClue] = useState("");
   const [isHintsOpen, setIsHintsOpen] = useState(false);
   const [settingsData, setSettingsData] = useState<any>(null);
+  const [cooldown, setCooldown] = useState(0);
+  useEffect(() => {
+    if (cooldown > 0) {
+      const timer = setTimeout(() => setCooldown(cooldown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [cooldown]);
   // useEffect(() => {
   //   if (currentClue && currentClue !== allHints[0]) {
   //     setAllHints((prev) => [currentClue, ...prev]);
@@ -71,6 +77,13 @@ export default function QuizPage() {
       setIsInitialLoading(true);
       const { data } = await supabase.auth.getUser();
       if (!data.user) return router.push("/");
+      window.addEventListener("beforeunload", () => {
+        localStorage.removeItem("qst_asesr4fgd54w53r2436543435433356");
+        localStorage.removeItem("qstart_3374rgewhgfdhgf84tyruir");
+        localStorage.removeItem("fb");
+        localStorage.removeItem("fb_fool");
+      });
+
       setUser(data.user);
       const { data: settings } = await supabase
         .from("settings")
@@ -95,8 +108,8 @@ export default function QuizPage() {
       // KADAKH FIX: If they are on Question 1 and no start time exists, set it.
       // Or, if you want to be super strict, reset it when current_question is 1.
       if (userIdx === 1) {
-        localStorage.setItem("quiz_start_time", Date.now().toString());
-        localStorage.setItem("q_start_time", Date.now().toString());
+        localStorage.setItem("qst_asesr4fgd54w53r2436543435433356", Date.now().toString());
+        localStorage.setItem("qstart_3374rgewhgfdhgf84tyruir", Date.now().toString());
       }
 
       if (userIdx > total && total > 0 && !eventClosed) {
@@ -113,6 +126,19 @@ export default function QuizPage() {
     };
     init();
   }, [router]);
+  //again well check user session before loading each question, so if they got logged out in the middle for some reason, they won't be able to fetch new questions
+  useEffect(() => {
+    const checkSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        router.push("/ctf/login");
+      }
+    };
+    checkSession();
+  }, [router, current]);
 
   const loadQuestion = async (userId: string) => {
     const { data: progress } = await supabase
@@ -189,11 +215,11 @@ export default function QuizPage() {
     }
 
     if (team.q3_time) {
-      return `Q3 • ${formatDuration(team.q3_time)}`;
+      return `Q3 • ${formatDuration(team.q3_time + team.q1_time! + team.q2_time!)}`;
     }
 
     if (team.q2_time) {
-      return `Q2 • ${formatDuration(team.q2_time)}`;
+      return `Q2 • ${formatDuration(team.q2_time + team.q1_time!)}`;
     }
 
     if (team.q1_time) {
@@ -292,6 +318,7 @@ export default function QuizPage() {
       supabase.removeChannel(sessionChannel);
     };
   }, [user, sessionId]);
+
   const handleSubmit = async () => {
     if (!input.trim() || !question || !user) return;
     setLoading(true);
@@ -320,7 +347,7 @@ export default function QuizPage() {
 
         // 🔥 get question start time
         const qStart = parseInt(
-          localStorage.getItem("q_start_time") || now.toString(),
+          localStorage.getItem("qstart_3374rgewhgfdhgf84tyruir") || now.toString(),
         );
 
         const timeTaken = now - qStart;
@@ -354,7 +381,7 @@ export default function QuizPage() {
         // 🏁 final total time
         if (q.order_index === 3) {
           const quizStart = parseInt(
-            localStorage.getItem("quiz_start_time") || now.toString(),
+            localStorage.getItem("qst_asesr4fgd54w53r2436543435433356") || now.toString(),
           );
           updateData.total_time = now - quizStart;
         }
@@ -364,7 +391,7 @@ export default function QuizPage() {
         });
 
         // 🔁 reset timer for next question
-        localStorage.setItem("q_start_time", Date.now().toString());
+        localStorage.setItem("qstart_3374rgewhgfdhgf84tyruir", Date.now().toString());
 
         // 🔥 move to next question
         const { data: nextQ } = await supabase
@@ -382,6 +409,7 @@ export default function QuizPage() {
         await Promise.all([loadQuestion(user.id), fetchLeaderboard()]);
       } else {
         setStatus("wrong");
+        setCooldown(10);
       }
     } catch (err) {
       console.error(err);
@@ -457,14 +485,15 @@ export default function QuizPage() {
   useEffect(() => {
     if (!user) return;
 
+    // Pre-load the audio so it's ready to go
+    const notificationAudio = new Audio("/notification.mp3");
+
     const channel = supabase
       .channel("clue-instant-broadcast")
       .on(
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "settings" },
         (payload) => {
-          // Use the Ref to always get the LATEST question number
-          // without making the useEffect re-run
           const activeQuestion = currentRef.current;
           const columnKey = `q${activeQuestion}_clue`;
           const newHints = payload.new[columnKey] || [];
@@ -472,12 +501,20 @@ export default function QuizPage() {
           setSettingsData((prev: any) => {
             const existingHints = prev?.[columnKey] || [];
 
-            // ONLY toast if the hints for the CURRENT active question increased
             if (newHints.length > existingHints.length) {
               const latestHint = newHints[newHints.length - 1];
               setCurrentClue(latestHint);
               setShowClueToast(true);
-              setTimeout(() => setShowClueToast(false), 10000);
+
+              // Play the pre-loaded audio
+              notificationAudio.play().catch((err) => {
+                console.log(
+                  "Macha, browser blocked the sound! Need user interaction first.",
+                  err,
+                );
+              });
+
+              setTimeout(() => setShowClueToast(false), 30000);
             }
             return payload.new;
           });
@@ -501,7 +538,10 @@ export default function QuizPage() {
       </div>
     );
   }
-  if (!question && finishedAfterClose && !finishedBefore || (userRank! > 3 && !question) ) {
+  if (
+    (!question && finishedAfterClose && !finishedBefore) ||
+    (userRank! > 3 && !question)
+  ) {
     return (
       <div className="h-screen w-full bg-[#05070b] text-white flex items-center justify-center px-6">
         <div className="max-w-2xl text-center space-y-10">
@@ -525,7 +565,7 @@ export default function QuizPage() {
     );
   }
 
-  if ((!question && eventClosed && !finishedBefore) ) {
+  if (!question && eventClosed && !finishedBefore) {
     return (
       <div className="h-screen w-full bg-[#05070b] text-white flex items-center justify-center px-6">
         <div className="max-w-2xl text-center space-y-10">
@@ -691,7 +731,7 @@ export default function QuizPage() {
     );
   }
   return (
-    <div className="h-screen w-full bg-[#05070b] text-white flex flex-col relative font-sans">
+    <div className="min-h-screen w-full bg-[#05070b] text-white flex flex-col relative font-sans overflow-x-hidden">
       <AnimatePresence>
         {showClueToast && currentClue && (
           <motion.div
@@ -701,13 +741,10 @@ export default function QuizPage() {
             className="fixed top-20 left-1/2 -translate-x-1/2 z-[200] w-[90%] max-w-md"
           >
             <div className="bg-sky-500 border-2 border-white/20 p-4 rounded-2xl shadow-[0_0_30px_rgba(14,165,233,0.5)] flex items-center gap-4 relative overflow-hidden">
-              {/* Animated Background Pulse */}
               <div className="absolute inset-0 bg-white/10 animate-pulse" />
-
               <div className="bg-black/20 p-2 rounded-lg relative z-10">
                 <Activity className="text-white animate-spin-slow" size={24} />
               </div>
-
               <div className="relative z-10 flex-1">
                 <p className="text-[10px] font-black text-black/60 uppercase tracking-tighter">
                   New Intelligence Received
@@ -716,7 +753,6 @@ export default function QuizPage() {
                   {currentClue}
                 </p>
               </div>
-
               <button
                 onClick={() => setShowClueToast(false)}
                 className="relative z-10 text-black/40 hover:text-black cursor-pointer"
@@ -727,7 +763,8 @@ export default function QuizPage() {
           </motion.div>
         )}
       </AnimatePresence>
-      <nav className="h-16 border-b border-white/5 flex items-center justify-between px-6 shrink-0 z-[60] bg-[#05070b]/80 backdrop-blur-md">
+
+      <nav className="h-16 border-b border-white/5 flex items-center justify-between px-6 shrink-0 z-[60] bg-[#05070b]/80 backdrop-blur-md sticky top-0">
         <div
           className={`text-xl font-black tracking-tighter ${orbitron.className}`}
         >
@@ -738,7 +775,7 @@ export default function QuizPage() {
             onClick={() => setIsHintsOpen(true)}
             className="p-2 bg-yellow-500/10 rounded-lg border border-yellow-500/20 text-yellow-400 cursor-pointer"
           >
-            💡 {/* You can use Lucide 'Lightbulb' here */}
+            💡
           </button>
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -748,13 +785,14 @@ export default function QuizPage() {
           </button>
         </div>
       </nav>
+
       <AnimatePresence>
         {isHintsOpen && (
           <motion.aside
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            className="fixed right-0 top-0 h-full w-[85%] md:w-[350px] bg-black/95 backdrop-blur-3xl z-[150] p-6 border-l border-white/10"
+            className="fixed right-0 top-0 h-full w-[85%] md:w-[350px] bg-black/95 backdrop-blur-3xl z-[150] p-6 border-l border-white/10 shadow-2xl"
           >
             <div className="flex justify-between items-center mb-8">
               <h2
@@ -767,14 +805,17 @@ export default function QuizPage() {
                 className="cursor-pointer text-gray-500"
               />
             </div>
-            <div className="space-y-4">
+            <div className="space-y-4 overflow-y-auto max-h-[calc(100vh-120px)] pr-2">
               {allHints.length > 0 ? (
                 allHints.map((h, i) => (
                   <div
                     key={i}
                     className="p-4 bg-white/5 border-l-4 border-yellow-500 rounded-r-xl"
                   >
-                    <p className="text-xs text-gray-500 mb-1">Hint {i + 1}</p>
+                    {/* here we have to show hint number decreasing order for the first hint : hint 1 */}
+                    <p className="text-xs text-gray-500 mb-1">
+                      Hint {allHints.length - i}
+                    </p>
                     <p className="text-sm font-bold text-white">{h}</p>
                   </div>
                 ))
@@ -787,43 +828,10 @@ export default function QuizPage() {
           </motion.aside>
         )}
       </AnimatePresence>
-      <AnimatePresence>
-        {showContinuePopup && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/90 backdrop-blur-xl p-6"
-          >
-            <div className="bg-[#0a1018] border-2 border-sky-500 rounded-3xl p-10 max-w-sm text-center space-y-6 shadow-[0_0_50px_rgba(14,165,233,0.3)]">
-              <Lock className="mx-auto text-sky-500 w-16 h-16 animate-pulse" />
-              <h2 className={`text-2xl font-black ${orbitron.className}`}>
-                EVENT ENDED
-              </h2>
-              <p className="text-gray-400 italic">"{closeMsg}"</p>
-              <div className="flex flex-col gap-3">
-                <Button
-                  onClick={() => setShowContinuePopup(false)}
-                  className="w-full bg-sky-500 text-black font-bold cursor-pointer"
-                >
-                  WISH TO CONTINUE
-                </Button>
-                <Button
-                  onClick={() => router.push("/")}
-                  variant="outline"
-                  className="w-full border-white/10 text-white hover:bg-white/5 cursor-pointer"
-                >
-                  EXIT TO HOME
-                </Button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
-      <div className="flex flex-1 overflow-hidden relative">
-        <main className="flex-1 flex flex-col items-center justify-center p-6 relative">
-          <div className="w-full max-w-lg space-y-8 mb-12">
+      <div className="flex flex-1 relative overflow-hidden">
+        <main className="flex-1 flex flex-col items-center overflow-y-auto p-6 relative">
+          <div className="w-full max-w-lg space-y-8 my-auto py-8">
             <div className="space-y-2">
               <div className="flex justify-between items-end">
                 <h1 className="text-2xl font-black italic text-gray-400">
@@ -840,9 +848,9 @@ export default function QuizPage() {
                 />
               </div>
             </div>
+
             <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 md:p-8 backdrop-blur-sm relative overflow-hidden">
               <div className="flex flex-col items-center gap-6">
-                {/* Header Section */}
                 <div className="text-center w-full">
                   <p className="text-[10px] font-bold tracking-[0.2em] text-sky-500 uppercase mb-2">
                     Active Challenge
@@ -853,8 +861,6 @@ export default function QuizPage() {
                     {question?.title || "Loading..."}
                   </h2>
                 </div>
-
-                {/* The Action Button - Clean & Responsive */}
                 <Button
                   onClick={() => window.open(question?.question, "_blank")}
                   className="w-full h-14 md:h-20 bg-sky-600 hover:bg-sky-500 text-black font-black rounded-xl transition-all active:scale-95 flex items-center justify-center gap-3 px-4"
@@ -864,22 +870,25 @@ export default function QuizPage() {
                     VIEW QUESTION FILE
                   </span>
                 </Button>
-
-                {/* Footer Info */}
                 <div className="w-full flex justify-between items-center text-[9px] text-gray-500 font-mono mt-2">
                   <span>REF_ID: {question?.id}</span>
                   <span className="flex items-center gap-1 text-green-500">
-                    <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+                    <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />{" "}
                     SECURE LINK
                   </span>
                 </div>
               </div>
             </div>
+
             <div className="space-y-4">
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !loading && cooldown === 0) {
+                    handleSubmit();
+                  }
+                }}
                 placeholder="Answer..."
                 className={`w-full bg-white/5 border-2 rounded-xl px-5 py-4 outline-none transition-all duration-300 text-lg font-bold tracking-widest text-center ${status === "wrong" ? "border-red-600 animate-shake" : "border-white/10 focus:border-sky-500 shadow-inner"}`}
               />
@@ -888,24 +897,18 @@ export default function QuizPage() {
                   WRONG ANSWER
                 </p>
               )}
-
-              {/* {currentClue && (
-                <div className="bg-yellow-500/10 border p-2 rounded-xl mb-4 ">
-                  <p className="text-yellow-500 text-sm font-bold">
-                    💡 HINT: {currentClue}
-                  </p>
-                </div>
-              )} */}
               <Button
                 onClick={handleSubmit}
-                disabled={loading}
-                className="w-full bg-sky-600 hover:bg-sky-400 text-black font-black py-7 rounded-xl transition-transform active:scale-95 cursor-pointer"
+                disabled={loading || cooldown > 0}
+                className="w-full bg-sky-600 hover:bg-sky-400 text-black font-black py-7 rounded-xl transition-transform active:scale-95 cursor-pointer disabled:bg-gray-800 disabled:text-gray-500 disabled:cursor-not-allowed"
               >
                 {loading
                   ? "VALIDATING..."
-                  : eventClosed
-                    ? "SUBMIT (PRACTICE)"
-                    : "SUBMIT RESPONSE"}
+                  : cooldown > 0
+                    ? `RETRY IN ${cooldown}s`
+                    : eventClosed
+                      ? "SUBMIT (PRACTICE)"
+                      : "SUBMIT RESPONSE"}
               </Button>
             </div>
           </div>
@@ -918,7 +921,7 @@ export default function QuizPage() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed md:relative top-0 right-0 h-full w-[85%] md:w-[350px] bg-black/90 md:bg-black/20 backdrop-blur-3xl border-l border-white/10 z-[100] flex flex-col"
+              className="fixed md:relative top-0 right-0 h-full w-[85%] md:w-[350px] bg-black/90 md:bg-black/20 backdrop-blur-3xl border-l border-white/10 z-[100] flex flex-col shadow-2xl"
             >
               <div className="p-6 border-b border-white/5 flex justify-between items-center shrink-0">
                 <div>
@@ -938,7 +941,6 @@ export default function QuizPage() {
                   <X size={24} />
                 </button>
               </div>
-
               <div className="flex-1 overflow-y-auto p-4 space-y-2 select-none relative">
                 {eventClosed && (
                   <div className="sticky top-0 z-10 bg-red-500/10 border border-red-500/20 py-2 px-4 rounded-lg mb-4 text-center">
@@ -1018,7 +1020,7 @@ export default function QuizPage() {
           width: 4px;
         }
         ::-webkit-scrollbar-thumb {
-          background: rgba(56, 189, 248, 0.2);
+          background: rgba(56, 189, 248, 0.4);
           border-radius: 10px;
         }
       `}</style>
