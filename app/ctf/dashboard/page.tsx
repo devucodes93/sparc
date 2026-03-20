@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["700", "800"] });
 
 export default function Page() {
-  const targetDate = new Date("2026-03-21T09:00:00");
+  const targetDate = new Date("2026-03-18T18:00:00");
   const [timeLeft, setTimeLeft] = useState<any>(null);
   const [started, setStarted] = useState(false);
   const router = useRouter();
