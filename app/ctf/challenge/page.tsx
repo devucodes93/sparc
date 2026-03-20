@@ -206,12 +206,11 @@ export default function QuizPage() {
       const { data: top20 } = await supabase
         .from("progress")
         .select(
-          `user_id, score, q1_time, q2_time, q3_time,q4_time, total_time, last_answered_at, users ( name )`,
+          `user_id, score, q1_time, q2_time, q3_time, q4_time, total_time, last_answered_at, users ( name )`,
         )
         .order("score", { ascending: false })
-        .order("last_answered_at", { ascending: true })
+        .order("total_time", { ascending: true, nullsFirst: false })
         .limit(20);
-
       if (top20) {
         let finalTeams = [...top20];
         const isUserInTop20 = top20.some(
@@ -292,11 +291,21 @@ export default function QuizPage() {
   const { top10, userRank, userTeam } = useMemo(() => {
     const sorted = [...teams].sort((a, b) => {
       if (b.score !== a.score) return b.score - a.score;
+
+      // Calculate cumulative time for all answered questions
       const timeA =
-        a.total_time ?? (a.q3_time ?? 0) + (a.q2_time ?? 0) + (a.q1_time ?? 0);
+        (a.q1_time ?? 0) +
+        (a.q2_time ?? 0) +
+        (a.q3_time ?? 0) +
+        (a.q4_time ?? 0);
       const timeB =
-        b.total_time ?? (b.q3_time ?? 0) + (b.q2_time ?? 0) + (b.q1_time ?? 0);
-      if (timeA !== timeB) return timeA - timeB;
+        (b.q1_time ?? 0) +
+        (b.q2_time ?? 0) +
+        (b.q3_time ?? 0) +
+        (b.q4_time ?? 0);
+
+      if (timeA !== timeB) return timeA - timeB; // less time = higher rank
+
       const lastA = a.last_answered_at
         ? new Date(a.last_answered_at).getTime()
         : Infinity;
