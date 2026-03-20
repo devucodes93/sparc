@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Orbitron } from "next/font/google";
 import { useRouter } from "next/navigation";
@@ -99,7 +99,7 @@ export default function QuizPage() {
         localStorage.setItem("q_start_time", Date.now().toString());
       }
 
-      if (userIdx > total && total > 0) {
+      if (userIdx > total && total > 0 && !eventClosed) {
         localStorage.setItem("fb", "true");
         setFinishedBefore(true);
       } else {
@@ -373,7 +373,8 @@ export default function QuizPage() {
           .eq("order_index", nextIdx)
           .single();
 
-        if (!nextQ) {
+        if (!nextQ && !eventClosed) {
+          console.log("came here closed !");
           localStorage.setItem("fb", "true");
         }
 
@@ -449,8 +450,12 @@ export default function QuizPage() {
       document.removeEventListener("contextmenu", handleContextMenu);
     };
   }, []);
+  const currentRef = useRef(current);
   useEffect(() => {
-    if (!user || !current) return;
+    currentRef.current = current;
+  }, [current]);
+  useEffect(() => {
+    if (!user) return;
 
     const channel = supabase
       .channel("clue-instant-broadcast")
@@ -458,16 +463,24 @@ export default function QuizPage() {
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "settings" },
         (payload) => {
-          setSettingsData(payload.new); // Update the whole settings object
+          // Use the Ref to always get the LATEST question number
+          // without making the useEffect re-run
+          const activeQuestion = currentRef.current;
+          const columnKey = `q${activeQuestion}_clue`;
+          const newHints = payload.new[columnKey] || [];
 
-          const columnKey = `q${current}_clue`;
-          if (
-            payload.new[columnKey]?.length >
-            (payload.old[columnKey]?.length || 0)
-          ) {
-            setShowClueToast(true);
-            setTimeout(() => setShowClueToast(false), 10000);
-          }
+          setSettingsData((prev: any) => {
+            const existingHints = prev?.[columnKey] || [];
+
+            // ONLY toast if the hints for the CURRENT active question increased
+            if (newHints.length > existingHints.length) {
+              const latestHint = newHints[newHints.length - 1];
+              setCurrentClue(latestHint);
+              setShowClueToast(true);
+              setTimeout(() => setShowClueToast(false), 10000);
+            }
+            return payload.new;
+          });
         },
       )
       .subscribe();
@@ -475,7 +488,7 @@ export default function QuizPage() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [current, user]); // Added user and current as deps
+  }, [user]); // Added user and current as deps
   if (isInitialLoading) {
     return (
       <div className="h-screen flex flex-col items-center justify-center bg-[#05070b] space-y-4">
@@ -488,7 +501,7 @@ export default function QuizPage() {
       </div>
     );
   }
-  if (!question && finishedAfterClose && !finishedBefore) {
+  if (!question && finishedAfterClose && !finishedBefore || (userRank! > 3 && !question) ) {
     return (
       <div className="h-screen w-full bg-[#05070b] text-white flex items-center justify-center px-6">
         <div className="max-w-2xl text-center space-y-10">
@@ -503,7 +516,7 @@ export default function QuizPage() {
           </p>
           <Button
             onClick={() => router.push("/")}
-            className="bg-sky-500 hover:bg-sky-600 text-black font-bold px-10 py-5 rounded-xl text-base transition-all duration-300 hover:scale-105 shadow-[0_0_30px_rgba(14,165,233,0.4)]"
+            className="bg-sky-500 hover:bg-sky-600 text-black font-bold px-10 py-5 rounded-xl text-base transition-all duration-300 hover:scale-105 shadow-[0_0_30px_rgba(14,165,233,0.4)] cursor-pointer"
           >
             BACK TO HOME
           </Button>
@@ -512,7 +525,7 @@ export default function QuizPage() {
     );
   }
 
-  if (!question && eventClosed && !finishedBefore) {
+  if ((!question && eventClosed && !finishedBefore) ) {
     return (
       <div className="h-screen w-full bg-[#05070b] text-white flex items-center justify-center px-6">
         <div className="max-w-2xl text-center space-y-10">
@@ -527,7 +540,7 @@ export default function QuizPage() {
           </p>
           <Button
             onClick={() => router.push("/")}
-            className="bg-sky-500 hover:bg-sky-600 text-black font-bold px-10 py-5 rounded-xl text-base transition-all duration-300 hover:scale-105 shadow-[0_0_30px_rgba(14,165,233,0.4)]"
+            className="bg-sky-500 hover:bg-sky-600 text-black font-bold px-10 py-5 rounded-xl text-base transition-all duration-300 hover:scale-105 shadow-[0_0_30px_rgba(14,165,233,0.4)] cursor-pointer"
           >
             BACK TO HOME
           </Button>
@@ -535,7 +548,7 @@ export default function QuizPage() {
       </div>
     );
   }
-  if (!question && finishedBefore) {
+  if (!question && finishedBefore && userRank! <= 3) {
     return (
       <div className="h-screen w-full bg-[#05070b] text-white flex flex-col font-sans">
         {/* Navbar added for mobile/web consistency */}
@@ -596,7 +609,7 @@ export default function QuizPage() {
 
               <Button
                 onClick={() => router.push("/")}
-                className="w-full md:w-auto bg-sky-600 hover:bg-sky-400 text-black font-black px-10 py-6 rounded-xl transition-all"
+                className="w-full md:w-auto bg-sky-600 hover:bg-sky-400 text-black font-black px-10 py-6 rounded-xl transition-all cursor-pointer"
               >
                 BACK TO HOME
               </Button>
@@ -669,7 +682,7 @@ export default function QuizPage() {
           </p>
           <Button
             onClick={() => router.push("/")}
-            className="bg-sky-500 hover:bg-sky-600 text-black font-bold px-10 py-5 rounded-xl text-base transition-all duration-300 hover:scale-105 shadow-[0_0_30px_rgba(14,165,233,0.4)]"
+            className="bg-sky-500 hover:bg-sky-600 text-black font-bold px-10 py-5 rounded-xl text-base transition-all duration-300 hover:scale-105 shadow-[0_0_30px_rgba(14,165,233,0.4)] cursor-pointer"
           >
             BACK TO HOME
           </Button>
@@ -706,7 +719,7 @@ export default function QuizPage() {
 
               <button
                 onClick={() => setShowClueToast(false)}
-                className="relative z-10 text-black/40 hover:text-black"
+                className="relative z-10 text-black/40 hover:text-black cursor-pointer"
               >
                 <X size={20} />
               </button>
@@ -723,13 +736,13 @@ export default function QuizPage() {
         <div className="flex gap-3">
           <button
             onClick={() => setIsHintsOpen(true)}
-            className="p-2 bg-yellow-500/10 rounded-lg border border-yellow-500/20 text-yellow-400"
+            className="p-2 bg-yellow-500/10 rounded-lg border border-yellow-500/20 text-yellow-400 cursor-pointer"
           >
-            <Activity size={20} /> {/* You can use Lucide 'Lightbulb' here */}
+            💡 {/* You can use Lucide 'Lightbulb' here */}
           </button>
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-2 bg-sky-500/10 rounded-lg border border-sky-500/20 text-sky-400"
+            className="p-2 bg-sky-500/10 rounded-lg border border-sky-500/20 text-sky-400 cursor-pointer"
           >
             <Trophy size={20} />
           </button>
@@ -761,7 +774,7 @@ export default function QuizPage() {
                     key={i}
                     className="p-4 bg-white/5 border-l-4 border-yellow-500 rounded-r-xl"
                   >
-                    <p className="text-xs text-gray-500 mb-1">Hints</p>
+                    <p className="text-xs text-gray-500 mb-1">Hint {i + 1}</p>
                     <p className="text-sm font-bold text-white">{h}</p>
                   </div>
                 ))
@@ -791,14 +804,14 @@ export default function QuizPage() {
               <div className="flex flex-col gap-3">
                 <Button
                   onClick={() => setShowContinuePopup(false)}
-                  className="w-full bg-sky-500 text-black font-bold"
+                  className="w-full bg-sky-500 text-black font-bold cursor-pointer"
                 >
                   WISH TO CONTINUE
                 </Button>
                 <Button
                   onClick={() => router.push("/")}
                   variant="outline"
-                  className="w-full border-white/10 text-white hover:bg-white/5"
+                  className="w-full border-white/10 text-white hover:bg-white/5 cursor-pointer"
                 >
                   EXIT TO HOME
                 </Button>
@@ -847,7 +860,7 @@ export default function QuizPage() {
                   className="w-full h-14 md:h-20 bg-sky-600 hover:bg-sky-500 text-black font-black rounded-xl transition-all active:scale-95 flex items-center justify-center gap-3 px-4"
                 >
                   <Trophy size={18} className="shrink-0" />
-                  <span className="text-sm md:text-lg tracking-tight uppercase">
+                  <span className="text-sm md:text-lg tracking-tight uppercase cursor-pointer">
                     VIEW QUESTION FILE
                   </span>
                 </Button>
@@ -876,17 +889,17 @@ export default function QuizPage() {
                 </p>
               )}
 
-              {currentClue && (
-                <div className="bg-yellow-500/10 border border-yellow-500/50 p-4 rounded-xl mb-4 animate-bounce">
+              {/* {currentClue && (
+                <div className="bg-yellow-500/10 border p-2 rounded-xl mb-4 ">
                   <p className="text-yellow-500 text-sm font-bold">
                     💡 HINT: {currentClue}
                   </p>
                 </div>
-              )}
+              )} */}
               <Button
                 onClick={handleSubmit}
                 disabled={loading}
-                className="w-full bg-sky-600 hover:bg-sky-400 text-black font-black py-7 rounded-xl transition-transform active:scale-95"
+                className="w-full bg-sky-600 hover:bg-sky-400 text-black font-black py-7 rounded-xl transition-transform active:scale-95 cursor-pointer"
               >
                 {loading
                   ? "VALIDATING..."
@@ -920,7 +933,7 @@ export default function QuizPage() {
                 </div>
                 <button
                   onClick={() => setIsSidebarOpen(false)}
-                  className="md:hidden p-2 text-gray-500 hover:text-white"
+                  className="md:hidden p-2 text-gray-500 hover:text-white cursor-pointer"
                 >
                   <X size={24} />
                 </button>
