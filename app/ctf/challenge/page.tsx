@@ -780,18 +780,18 @@ export default function QuizPage() {
         >
           SP<span className="text-sky-500">AR</span>C
         </div>
-      
-            <div className="flex items-center gap-4">
-            <span className="hidden md:block text-xs text-gray-400 uppercase tracking-widest">
-              Virtual CTF
-            </span>
-            <Button
-              onClick={handleLogout}
-              className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 text-xs px-4 h-8 rounded-lg transition-all cursor-pointer"
-            >
-              Logout
-            </Button>
-         
+
+        <div className="flex items-center gap-4">
+          <span className="hidden md:block text-xs text-gray-400 uppercase tracking-widest">
+            Virtual CTF
+          </span>
+          <Button
+            onClick={handleLogout}
+            className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 text-xs px-4 h-8 rounded-lg transition-all cursor-pointer"
+          >
+            Logout
+          </Button>
+
           <button
             onClick={() => setIsHintsOpen(true)}
             className="p-2 bg-yellow-500/10 rounded-lg border border-yellow-500/20 text-yellow-400 cursor-pointer"
@@ -997,7 +997,7 @@ export default function QuizPage() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed md:relative top-0 right-0 h-full w-[85%] md:w-[350px] bg-black/90 md:bg-black/20 backdrop-blur-3xl border-l border-white/10 z-[100] flex flex-col shadow-2xl"
+              className="fixed top-0 right-0 h-full w-[85%] md:w-[350px] bg-black/90 backdrop-blur-3xl border-l border-white/10 z-[100] flex flex-col shadow-2xl"
             >
               <div className="p-6 border-b border-white/5 flex justify-between items-center shrink-0">
                 <div>
@@ -1012,7 +1012,7 @@ export default function QuizPage() {
                 </div>
                 <button
                   onClick={() => setIsSidebarOpen(false)}
-                  className="md:hidden p-2 text-gray-500 hover:text-white cursor-pointer"
+                  className=" p-2 text-gray-500 hover:text-white cursor-pointer"
                 >
                   <X size={24} />
                 </button>
