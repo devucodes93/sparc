@@ -394,7 +394,7 @@ export default function ProfessionalEventPage() {
           }}
           className="w-full bg-sky-600 hover:bg-sky-500 text-black font-black py-6 rounded-xl uppercase tracking-[0.2em] shadow-lg shadow-sky-600/20 transition-all active:scale-[0.98]"
         >
-          Login
+          Enter
         </Button>
       </div>
     </div>
