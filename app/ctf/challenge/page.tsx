@@ -407,7 +407,6 @@ export default function QuizPage() {
         const nowISO = new Date().toISOString();
         let updateData: any = {
           user_id: user.id,
-          current_question: nextIdx,
           score: (p?.score || 0) + 1,
           completed_at: new Date().toISOString(),
           last_answered_at: nowISO,
