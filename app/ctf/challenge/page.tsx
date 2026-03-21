@@ -60,6 +60,17 @@ export default function QuizPage() {
   const [actualUserRank, setActualUserRank] = useState<number | null>(null);
 
   useEffect(() => {
+    const count = localStorage.getItem("visit_count");
+    if (!count) {
+      localStorage.setItem("visit_count", "true");
+
+      fetch("/api/visits", { method: "PUT" }).catch((error) =>
+        console.error("Error updating visit count:", error),
+      );
+    }
+  }, []);
+
+  useEffect(() => {
     if (cooldown > 0) {
       const timer = setTimeout(() => setCooldown(cooldown - 1), 1000);
       return () => clearTimeout(timer);
@@ -79,14 +90,7 @@ export default function QuizPage() {
     const init = async () => {
       setIsInitialLoading(true);
 
-      //if time is not reached in the morning 2026-03-21T09:00:00  navigation to home page 
-      if (new Date() < new Date("2026-03-21T09:00:00")) {
-        router.push("/");
-        return;
-      }
-
-
-     
+      //if time is not reached in the morning 2026-03-21T09:00:00  navigation to home page
 
       const { data } = await supabase.auth.getUser();
       if (!data.user) return router.push("/");
@@ -177,10 +181,9 @@ export default function QuizPage() {
 
     const { data: qData } = await supabase
       .from("questions")
-      .select("*")
+      .select("id, question, title, order_index") // ← explicit columns, no correct_answer
       .eq("order_index", nextIndex)
       .single();
-
     setCurrentClue("");
     if (qData) {
       setQuestion(qData);
@@ -369,17 +372,14 @@ export default function QuizPage() {
     setLoading(true);
 
     try {
-      const { data: q } = await supabase
-        .from("questions")
-        .select("correct_answer, order_index")
-        .eq("id", question.id)
-        .single();
+      const { data: q } = await supabase.rpc("check_answer", {
+        q_id: question.id,
+        user_ans: input.trim(),
+      });
 
       if (!q) throw new Error("Check failed");
 
-      if (
-        input.toLowerCase().trim() === q.correct_answer.toLowerCase().trim()
-      ) {
+      if (q.correct) {
         setStatus("correct");
 
         confetti({
@@ -403,7 +403,7 @@ export default function QuizPage() {
           .eq("user_id", user.id)
           .single();
 
-        const nextIdx = q.order_index + 1;
+        const nextIdx = question.order_index + 1;
         const nowISO = new Date().toISOString();
         let updateData: any = {
           user_id: user.id,
@@ -413,16 +413,16 @@ export default function QuizPage() {
           last_answered_at: nowISO,
         };
 
-        if (q.order_index === 1) {
+        if (question.order_index === 1) {
           updateData.q1_time = timeTaken;
-        } else if (q.order_index === 2) {
+        } else if (question.order_index === 2) {
           updateData.q2_time = timeTaken;
-        } else if (q.order_index === 3) {
+        } else if (question.order_index === 3) {
           updateData.q3_time = timeTaken;
-        } else if (q.order_index === 4) {
-          updateData.q4_time = timeTaken; // ADD THIS
+        } else if (question.order_index === 4) {
+          updateData.q4_time = timeTaken;
         }
-        if (q.order_index === 4) {
+        if (question.order_index === 4) {
           // CHANGED 3 → 4
           const quizStart = parseInt(
             localStorage.getItem("qst_asesr4fgd54w53r2436543435433356") ||
@@ -443,7 +443,7 @@ export default function QuizPage() {
 
         const { data: nextQ } = await supabase
           .from("questions")
-          .select("*")
+          .select("id")
           .eq("order_index", nextIdx)
           .single();
 
